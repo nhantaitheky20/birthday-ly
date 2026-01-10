@@ -96,8 +96,7 @@
 </head>
 <body>
 
-<audio autoplay loop>
-  <!-- 🎵 BẠN CÓ THỂ ĐỔI LINK NHẠC Ở ĐÂY -->
+<audio id="bgm" loop>
   <source src="happy.mp3" type="audio/mpeg">
 </audio>
 
@@ -153,10 +152,13 @@ cậu sẽ mỉm cười… giống như cách cậu từng làm mình vui vậy
   typeWriter();
 
   function nhanQua() {
-    // 🔴 ĐỔI LINK ZALO CỦA BẠN Ở ĐÂY
-    window.location.href = "https://zalo.me/0941153721";
-  }
+    const audio = document.getElementById("bgm");
+    audio.play();
 
+    setTimeout(() => {
+        window.location.href = "https://zalo.me/0944153721";
+    }, 1500);
+}
   // ❤️ Tạo tim bay
   function createHeart() {
     const heart = document.createElement("div");
