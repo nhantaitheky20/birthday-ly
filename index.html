@@ -65,7 +65,7 @@ h1 {
 <body>
 
 <!-- 🎵 NHẠC -->
-<audio id="bgm" loop>
+<audio id="bgm" loop playsinline>
     <source src="happy.mp3" type="audio/mpeg">
 </audio>
 
@@ -82,14 +82,22 @@ let musicStarted = false;
 
 function startMusic() {
     if (musicStarted) return;
+
     const audio = document.getElementById("bgm");
-    audio.play().catch(()=>{});
-    musicStarted = true;
+    if (!audio) return;
+
+    audio.muted = false;
+    audio.play().then(() => {
+        musicStarted = true;
+        console.log("Music started");
+    }).catch(err => {
+        console.log("Play failed:", err);
+    });
 }
 
-document.addEventListener("click", startMusic);
-document.addEventListener("touchstart", startMusic);
-
+// Bắt tương tác thật sớm
+document.body.addEventListener("touchstart", startMusic, { once: true });
+document.body.addEventListener("click", startMusic, { once: true });
 // ================= LỜI CHÚC =================
 const message = `
 Hôm nay là một ngày thật đặc biệt...
