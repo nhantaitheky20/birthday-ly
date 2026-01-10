@@ -3,20 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Happy Birthday Ly 💖</title>
+<title>Happy Birthday 💖</title>
 
 <style>
 body {
     margin: 0;
     background: linear-gradient(45deg, #ff9a9e, #fad0c4);
     overflow: hidden;
-    font-family: 'Arial', sans-serif;
+    font-family: Arial, sans-serif;
     text-align: center;
 }
 
 .card {
     position: relative;
-    top: 50px;
+    top: 40px;
+    padding: 20px;
 }
 
 img {
@@ -34,7 +35,8 @@ h1 {
     color: white;
     font-size: 20px;
     margin: 20px;
-    min-height: 120px;
+    min-height: 140px;
+    white-space: pre-line;
 }
 
 #btn {
@@ -51,8 +53,8 @@ h1 {
 
 .heart {
     position: fixed;
-    color: red;
     animation: fly 4s linear forwards;
+    pointer-events: none;
 }
 
 @keyframes fly {
@@ -66,57 +68,50 @@ h1 {
 
 <!-- 🎵 NHẠC -->
 <audio id="bgm" loop playsinline>
-    <source src="happy.mp3" type="audio/mpeg">
+  <source src="happy.mp3" type="audio/mpeg">
 </audio>
 
 <div class="card">
-    <h1>💖 Happy Birthday Ly 💖</h1>
+    <h1>💖 Happy Birthday 💖</h1>
     <img src="ly.jpeg" alt="Ly">
     <div id="text"></div>
+    <br>
     <button id="btn" onclick="nhanQua()">🎁 Bất ngờ ở đây, bấm vào đi 🎁</button>
 </div>
 
 <script>
-// ================= NHẠC: chạm màn hình là chạy =================
+// ====== BẬT NHẠC KHI CHẠM (CHẠY TRÊN MOBILE) ======
 let musicStarted = false;
 
 function startMusic() {
     if (musicStarted) return;
-
     const audio = document.getElementById("bgm");
     if (!audio) return;
 
     audio.muted = false;
     audio.play().then(() => {
         musicStarted = true;
-        console.log("Music started");
-    }).catch(err => {
-        console.log("Play failed:", err);
-    });
+    }).catch(() => {});
 }
 
-// Bắt tương tác thật sớm
 document.body.addEventListener("touchstart", startMusic, { once: true });
 document.body.addEventListener("click", startMusic, { once: true });
-// ================= LỜI CHÚC =================
+
+// ====== LỜI CHÚC ======
 const message = `
 Hôm nay là một ngày thật đặc biệt...
-Vì đó là ngày Ly xuất hiện trên thế giới này 💖
+Vì đó là ngày cậu xuất hiện trên thế giới này 💖
 
-Có thể cậu không biết,
-nhưng từ khi cậu xuất hiện,
-mọi thứ xung quanh mình dường như dịu dàng hơn một chút...
+Chúc cậu luôn vui vẻ,
+luôn cười thật nhiều,
+luôn hạnh phúc và được yêu thương thật nhiều nhé 🥰
 
-Chúc cậu luôn cười thật nhiều,
-luôn hạnh phúc,
-luôn được yêu thương theo cách cậu xứng đáng 🥰
-
-Và cuối cùng...
+Cảm ơn cậu vì đã xuất hiện trong cuộc đời này.
 Mình có một món quà nhỏ dành cho cậu 🎁
 `;
 
 let i = 0;
-const speed = 50;
+const speed = 45;
 
 function typeWriter() {
     if (i < message.length) {
@@ -130,12 +125,34 @@ function typeWriter() {
 
 typeWriter();
 
-// ================= NHẬN QUÀ =================
+// ====== KHI BẤM NHẬN QUÀ ======
 function nhanQua() {
-    window.location.href = "https://zalo.me/0941153721";
+    document.body.innerHTML = `
+        <div style="
+            height:100vh;
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            align-items:center;
+            background:linear-gradient(45deg,#ff9a9e,#fad0c4);
+            color:white;
+            text-align:center;
+            font-family:Arial;
+            padding:20px;
+        ">
+            <h1>💖 Quà đang được gửi cho cậu... 💖</h1>
+            <p style="font-size:20px;margin-top:20px;">
+                Vui lòng kiểm tra tài khoản MB Bank nhé ✨
+            </p>
+            <p style="margin-top:10px;">
+                Mình mong cậu sẽ thích món quà nhỏ này 🥰
+            </p>
+            <div style="margin-top:30px;font-size:40px;">⏳💗⏳</div>
+        </div>
+    `;
 }
 
-// ================= TIM BAY =================
+// ====== TIM BAY ======
 function createHeart() {
     const heart = document.createElement("div");
     heart.className = "heart";
@@ -145,9 +162,7 @@ function createHeart() {
     heart.style.fontSize = (20 + Math.random() * 30) + "px";
     document.body.appendChild(heart);
 
-    setTimeout(() => {
-        heart.remove();
-    }, 4000);
+    setTimeout(() => heart.remove(), 4000);
 }
 
 setInterval(createHeart, 300);
