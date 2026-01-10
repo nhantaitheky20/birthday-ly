@@ -2,39 +2,151 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>Happy Birthday Ly 💖</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday Ly 💖</title>
+
 <style>
-  body {
+body {
     margin: 0;
-    height: 100vh;
+    background: linear-gradient(45deg, #ff9a9e, #fad0c4);
     overflow: hidden;
-    font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #ff9a9e, #fad0c4, #fbc2eb, #a18cd1);
-    background-size: 400% 400%;
-    animation: bgmove 12s ease infinite;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-  }
-
-  @keyframes bgmove {
-    0% {background-position:0% 50%}
-    50% {background-position:100% 50%}
-    100% {background-position:0% 50%}
-  }
-
-  .card {
+    font-family: 'Arial', sans-serif;
     text-align: center;
-    max-width: 90%;
-    background: rgba(255,255,255,0.15);
-    backdrop-filter: blur(10px);
-    padding: 25px;
-    border-radius: 25px;
-    box-shadow: 0 0 40px rgba(255,182,193,0.6);
-  }
+}
 
+.card {
+    position: relative;
+    top: 50px;
+}
+
+img {
+    width: 220px;
+    border-radius: 20px;
+    box-shadow: 0 0 20px rgba(255,255,255,0.8);
+}
+
+h1 {
+    color: white;
+    text-shadow: 0 0 10px red;
+}
+
+#text {
+    color: white;
+    font-size: 20px;
+    margin: 20px;
+    min-height: 120px;
+}
+
+#btn {
+    display: none;
+    padding: 15px 30px;
+    font-size: 20px;
+    border-radius: 30px;
+    border: none;
+    background: #ff3366;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 0 10px white;
+}
+
+.heart {
+    position: fixed;
+    color: red;
+    animation: fly 4s linear forwards;
+}
+
+@keyframes fly {
+    from { transform: translateY(0); opacity: 1; }
+    to { transform: translateY(-800px); opacity: 0; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- 🎵 NHẠC -->
+<audio id="bgm" loop>
+    <source src="happy.mp3" type="audio/mpeg">
+</audio>
+
+<div class="card">
+    <h1>💖 Happy Birthday Ly 💖</h1>
+    <img src="ly.jpeg" alt="Ly">
+    <div id="text"></div>
+    <button id="btn" onclick="nhanQua()">🎁 Bất ngờ ở đây, bấm vào đi 🎁</button>
+</div>
+
+<script>
+// ================= NHẠC: chạm màn hình là chạy =================
+let musicStarted = false;
+
+function startMusic() {
+    if (musicStarted) return;
+    const audio = document.getElementById("bgm");
+    audio.play().catch(()=>{});
+    musicStarted = true;
+}
+
+document.addEventListener("click", startMusic);
+document.addEventListener("touchstart", startMusic);
+
+// ================= LỜI CHÚC =================
+const message = `
+Hôm nay là một ngày thật đặc biệt...
+Vì đó là ngày Ly xuất hiện trên thế giới này 💖
+
+Có thể cậu không biết,
+nhưng từ khi cậu xuất hiện,
+mọi thứ xung quanh mình dường như dịu dàng hơn một chút...
+
+Chúc cậu luôn cười thật nhiều,
+luôn hạnh phúc,
+luôn được yêu thương theo cách cậu xứng đáng 🥰
+
+Và cuối cùng...
+Mình có một món quà nhỏ dành cho cậu 🎁
+`;
+
+let i = 0;
+const speed = 50;
+
+function typeWriter() {
+    if (i < message.length) {
+        document.getElementById("text").innerHTML += message.charAt(i);
+        i++;
+        setTimeout(typeWriter, speed);
+    } else {
+        document.getElementById("btn").style.display = "inline-block";
+    }
+}
+
+typeWriter();
+
+// ================= NHẬN QUÀ =================
+function nhanQua() {
+    window.location.href = "https://zalo.me/0941153721";
+}
+
+// ================= TIM BAY =================
+function createHeart() {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerHTML = "💖";
+    heart.style.left = Math.random() * window.innerWidth + "px";
+    heart.style.bottom = "0px";
+    heart.style.fontSize = (20 + Math.random() * 30) + "px";
+    document.body.appendChild(heart);
+
+    setTimeout(() => {
+        heart.remove();
+    }, 4000);
+}
+
+setInterval(createHeart, 300);
+</script>
+
+</body>
+</html>
   img {
     width: 180px;
     height: 180px;
