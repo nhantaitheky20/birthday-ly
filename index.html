@@ -61,6 +61,46 @@ h1 {
     from { transform: translateY(0); opacity: 1; }
     to { transform: translateY(-800px); opacity: 0; }
 }
+
+/* ===== OVERLAY ===== */
+#giftOverlay {
+    position: fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background: linear-gradient(45deg,#ff9a9e,#fad0c4);
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    font-family:Arial;
+    z-index:9999;
+    padding:20px;
+    opacity:0;
+    pointer-events:none;
+    transition: opacity 1s ease;
+}
+
+#giftOverlay.show {
+    opacity:1;
+    pointer-events:auto;
+}
+
+/* Loading */
+.loader {
+    margin-top:30px;
+    width:60px;
+    height:60px;
+    border:6px solid rgba(255,255,255,0.3);
+    border-top:6px solid white;
+    border-radius:50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
 </style>
 </head>
 
@@ -79,8 +119,22 @@ h1 {
     <button id="btn" onclick="nhanQua()">🎁 Bất ngờ ở đây, bấm vào đi 🎁</button>
 </div>
 
+<!-- ===== OVERLAY QUÀ ===== -->
+<div id="giftOverlay">
+    <div>
+        <h1>💖 Quà đang được gửi cho cậu... 💖</h1>
+        <p style="font-size:20px;margin-top:20px;">
+            Vui lòng kiểm tra tài khoản MB Bank nhé ✨
+        </p>
+        <p style="margin-top:10px;">
+            Mình mong cậu sẽ thích món quà nhỏ này 🥰
+        </p>
+        <div class="loader"></div>
+    </div>
+</div>
+
 <script>
-// ====== BẬT NHẠC KHI CHẠM (CHẠY TRÊN MOBILE) ======
+// ====== BẬT NHẠC KHI CHẠM (MOBILE OK) ======
 let musicStarted = false;
 
 function startMusic() {
@@ -125,31 +179,10 @@ function typeWriter() {
 
 typeWriter();
 
-// ====== KHI BẤM NHẬN QUÀ ======
+// ====== BẤM NHẬN QUÀ ======
 function nhanQua() {
-    document.body.innerHTML = `
-        <div style="
-            height:100vh;
-            display:flex;
-            flex-direction:column;
-            justify-content:center;
-            align-items:center;
-            background:linear-gradient(45deg,#ff9a9e,#fad0c4);
-            color:white;
-            text-align:center;
-            font-family:Arial;
-            padding:20px;
-        ">
-            <h1>💖 Quà đang được gửi cho cậu... 💖</h1>
-            <p style="font-size:20px;margin-top:20px;">
-                Vui lòng kiểm tra tài khoản MB Bank nhé ✨
-            </p>
-            <p style="margin-top:10px;">
-                Mình mong cậu sẽ thích món quà nhỏ này 🥰
-            </p>
-            <div style="margin-top:30px;font-size:40px;">⏳💗⏳</div>
-        </div>
-    `;
+    const overlay = document.getElementById("giftOverlay");
+    overlay.classList.add("show");
 }
 
 // ====== TIM BAY ======
@@ -166,6 +199,9 @@ function createHeart() {
 }
 
 setInterval(createHeart, 300);
+
+// Tim bay cả trên overlay
+setInterval(createHeart, 600);
 </script>
 
 </body>
