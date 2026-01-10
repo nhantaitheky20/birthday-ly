@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Happy Birthday Ly 💖</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4, #fbc2eb, #a18cd1);
+    background-size: 400% 400%;
+    animation: bgmove 12s ease infinite;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+  }
+
+  @keyframes bgmove {
+    0% {background-position:0% 50%}
+    50% {background-position:100% 50%}
+    100% {background-position:0% 50%}
+  }
+
+  .card {
+    text-align: center;
+    max-width: 90%;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    padding: 25px;
+    border-radius: 25px;
+    box-shadow: 0 0 40px rgba(255,182,193,0.6);
+  }
+
+  img {
+    width: 180px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid rgba(255,255,255,0.8);
+    box-shadow: 0 0 20px pink;
+    margin-bottom: 15px;
+  }
+
+  h1 {
+    margin: 10px 0;
+    color: #fff;
+  }
+
+  #text {
+    font-size: 20px;
+    line-height: 1.6;
+    min-height: 140px;
+    white-space: pre-line;
+  }
+
+  #btn {
+    display: none;
+    margin-top: 20px;
+    padding: 14px 28px;
+    font-size: 20px;
+    border: none;
+    border-radius: 20px;
+    background: linear-gradient(45deg, #ff5f9e, #ff8ccf);
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(255,105,180,0.8);
+  }
+
+  #btn:hover {
+    transform: scale(1.05);
+  }
+
+  .heart {
+    position: absolute;
+    color: rgba(255,182,193,0.9);
+    animation: float 10s linear infinite;
+    pointer-events: none;
+  }
+
+  @keyframes float {
+    0% {
+      transform: translateY(110vh) scale(0.6);
+      opacity: 0;
+    }
+    10% { opacity: 1; }
+    100% {
+      transform: translateY(-10vh) scale(1.4);
+      opacity: 0;
+    }
+  }
+</style>
+</head>
+<body>
+
+<audio autoplay loop>
+  <!-- 🎵 BẠN CÓ THỂ ĐỔI LINK NHẠC Ở ĐÂY -->
+  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
+</audio>
+
+<div class="card">
+  <!-- 🖼️ ĐỔI LINK ẢNH CỦA LY Ở ĐÂY -->
+  <img src="https://i.imgur.com/8Km9tLL.jpg" alt="Ly">
+
+  <h1>💖 Happy Birthday Ly 💖</h1>
+  <div id="text"></div>
+
+  <button id="btn" onclick="nhanQua()">🎁 Bất ngờ ở đây, bấm vào đi</button>
+</div>
+
+<script>
+  // 💌 LỜI CHÚC RIÊNG DÀNH CHO LY
+  const message = 
+`Hôm nay là một ngày thật đặc biệt…
+Vì đó là ngày Ly xuất hiện trên thế giới này 💖
+
+Có thể cậu không biết,
+nhưng từ khi cậu xuất hiện,
+mọi thứ xung quanh mình dường như dịu dàng hơn một chút,
+vui hơn một chút,
+và ấm áp hơn rất nhiều.
+
+Mình thật sự trân trọng những khoảnh khắc có cậu,
+dù là những lúc cười,
+hay chỉ là những lúc nói chuyện rất vu vơ.
+
+Chúc cậu luôn xinh đẹp,
+luôn mỉm cười thật nhiều,
+và luôn được hạnh phúc — không chỉ hôm nay,
+mà là mỗi ngày về sau ✨
+
+Và Ly à…
+mình có một món quà nhỏ dành cho cậu 🎁
+Hy vọng khi nhận được,
+cậu sẽ mỉm cười… giống như cách cậu từng làm mình vui vậy 💕`;
+
+  const textDiv = document.getElementById("text");
+  let i = 0;
+
+  function typeWriter() {
+    if (i < message.length) {
+      textDiv.innerHTML += message.charAt(i);
+      i++;
+      setTimeout(typeWriter, 50);
+    } else {
+      document.getElementById("btn").style.display = "inline-block";
+    }
+  }
+
+  typeWriter();
+
+  function nhanQua() {
+    // 🔴 ĐỔI LINK ZALO CỦA BẠN Ở ĐÂY
+    window.location.href = "https://zalo.me/xxxxxxxx";
+  }
+
+  // ❤️ Tạo tim bay
+  function createHeart() {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerHTML = "❤";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.fontSize = (14 + Math.random() * 26) + "px";
+    heart.style.animationDuration = (8 + Math.random() * 6) + "s";
+    document.body.appendChild(heart);
+
+    setTimeout(() => {
+      heart.remove();
+    }, 14000);
+  }
+
+  setInterval(createHeart, 500);
+</script>
+
+</body>
+</html>
