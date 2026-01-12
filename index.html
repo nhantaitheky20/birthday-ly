@@ -117,6 +117,16 @@ h1 {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
 }
+    @keyframes miniFly {
+    from {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+    to {
+        transform: translateY(-40px) scale(1.6);
+        opacity: 0;
+    }
+    }
 </style>
 </head>
 
@@ -166,7 +176,21 @@ function startMusic() {
 
 document.body.addEventListener("touchstart", startMusic, { once: true });
 document.body.addEventListener("click", startMusic, { once: true });
+    
+function createMiniHeart(x, y) {
+    const heart = document.createElement("div");
+    heart.innerHTML = "💖";
+    heart.style.position = "fixed";
+    heart.style.left = x + "px";
+    heart.style.top = y + "px";
+    heart.style.fontSize = "16px";
+    heart.style.pointerEvents = "none";
+    heart.style.animation = "miniFly 1.2s ease-out forwards";
+    document.body.appendChild(heart);
 
+    setTimeout(() => heart.remove(), 1200);
+}
+    
 // ====== LỜI CHÚC ======
 const message = `
 Hôm nay là một ngày thật đặc biệt...
@@ -185,11 +209,21 @@ const speed = 45;
 
 function typeWriter() {
     if (i < message.length) {
-        document.getElementById("text").innerHTML += message.charAt(i);
+        const textEl = document.getElementById("text");
+        textEl.innerHTML += message.charAt(i);
         i++;
+
+        // tạo tim tại vị trí cuối dòng chữ
+        const rect = textEl.getBoundingClientRect();
+        createMiniHeart(
+            rect.left + rect.width - 10,
+            rect.top + rect.height - 20
+        );
+
         setTimeout(typeWriter, speed);
     } else {
-        document.getElementById("btn").style.display = "inline-block";
+        // nếu bạn đang ẩn nút thì dòng này có thể đã bị comment
+        // document.getElementById("btn").style.display = "inline-block";
     }
 }
 
