@@ -14,6 +14,7 @@ body {
     text-align: center;
 }
 
+/* Layout card căn giữa màn hình */
 .card {
     min-height: 100vh;
     padding: 20px;
@@ -30,103 +31,65 @@ img {
     max-width: 220px;
     border-radius: 20px;
     box-shadow: 0 0 20px rgba(255,255,255,0.8);
+    margin-bottom: 10px;
 }
 
 h1 {
     color: white;
     text-shadow: 0 0 10px red;
+    margin-bottom: 10px;
 }
 
 #text {
-    max-width: 90vw;
     color: white;
-    font-size: 20px;
+    font-size: 18px;
     margin: 20px;
     min-height: 140px;
     white-space: pre-line;
+    max-width: 90vw;
 }
 
-#btn {
-    display: none;
-    padding: 15px 30px;
-    font-size: 20px;
-    border-radius: 30px;
-    border: none;
-    background: #ff3366;
-    color: white;
-    cursor: pointer;
-    box-shadow: 0 0 10px white;
-}
-
+/* Tim bay nền */
 .heart {
     position: fixed;
     animation: fly 4s linear forwards;
     pointer-events: none;
 }
-@media (max-width: 480px) {
-    h1 {
-        font-size: 24px;
-    }
 
-    #text {
-        font-size: 17px;
-    }
-}
-    
 @keyframes fly {
     from { transform: translateY(0); opacity: 1; }
     to { transform: translateY(-800px); opacity: 0; }
 }
 
-/* ===== OVERLAY ===== */
-#giftOverlay {
-    position: fixed;
-    top:0; left:0;
-    width:100%; height:100%;
-    background: linear-gradient(45deg,#ff9a9e,#fad0c4);
-    color:white;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    text-align:center;
-    font-family:Arial;
-    z-index:9999;
-    padding:20px;
-    opacity:0;
-    pointer-events:none;
-    transition: opacity 1s ease;
-}
-
-#giftOverlay.show {
-    opacity:1;
-    pointer-events:auto;
-}
-
-/* Loading */
-.loader {
-    margin-top:30px;
-    width:60px;
-    height:60px;
-    border:6px solid rgba(255,255,255,0.3);
-    border-top:6px solid white;
-    border-radius:50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-    @keyframes miniFly {
+/* ===== Tim nhỏ theo từng ký tự ===== */
+@keyframes miniFly {
     from {
-        transform: translateY(0) scale(1);
+        transform: translate(0, 0) scale(0.8) rotate(0deg);
         opacity: 1;
     }
     to {
-        transform: translateY(-40px) scale(1.6);
+        transform: translate(-10px, -50px) scale(1.6) rotate(20deg);
         opacity: 0;
     }
+}
+
+.mini-heart {
+    position: fixed;
+    pointer-events: none;
+    font-size: 18px;
+    animation: miniFly 1.2s ease-out forwards;
+    z-index: 9999;
+}
+
+/* Mobile tối ưu chữ */
+@media (max-width: 480px) {
+    h1 {
+        font-size: 24px;
     }
+    #text {
+        font-size: 17px;
+    }
+}
 </style>
 </head>
 
@@ -141,28 +104,11 @@ h1 {
     <h1>💖 Happy Birthday 💖</h1>
     <img src="ly.jpeg" alt="Ly">
     <div id="text"></div>
-    <br>
-    
-</div>
-
-<!-- ===== OVERLAY QUÀ ===== -->
-<div id="giftOverlay">
-    <div>
-        <h1>💖 Quà đang được gửi cho cậu... 💖</h1>
-        <p style="font-size:20px;margin-top:20px;">
-            Vui lòng kiểm tra tài khoản MB Bank nhé ✨
-        </p>
-        <p style="margin-top:10px;">
-            Mình mong cậu sẽ thích món quà nhỏ này 🥰
-        </p>
-        <div class="loader"></div>
-    </div>
 </div>
 
 <script>
-// ====== BẬT NHẠC KHI CHẠM (MOBILE OK) ======
+// ====== BẬT NHẠC KHI CHẠM ======
 let musicStarted = false;
-
 function startMusic() {
     if (musicStarted) return;
     const audio = document.getElementById("bgm");
@@ -176,21 +122,7 @@ function startMusic() {
 
 document.body.addEventListener("touchstart", startMusic, { once: true });
 document.body.addEventListener("click", startMusic, { once: true });
-    
-function createMiniHeart(x, y) {
-    const heart = document.createElement("div");
-    heart.innerHTML = "💖";
-    heart.style.position = "fixed";
-    heart.style.left = x + "px";
-    heart.style.top = y + "px";
-    heart.style.fontSize = "16px";
-    heart.style.pointerEvents = "none";
-    heart.style.animation = "miniFly 1.2s ease-out forwards";
-    document.body.appendChild(heart);
 
-    setTimeout(() => heart.remove(), 1200);
-}
-    
 // ====== LỜI CHÚC ======
 const message = `
 Hôm nay là một ngày thật đặc biệt...
@@ -201,40 +133,55 @@ luôn cười thật nhiều,
 luôn hạnh phúc và được yêu thương thật nhiều nhé 🥰
 
 Cảm ơn cậu vì đã xuất hiện trong cuộc đời này.
-Mình có một món quà nhỏ dành cho cậu 🎁
 `;
 
 let i = 0;
 const speed = 45;
 
+// ====== Tim đổi màu ngẫu nhiên ======
+function randomColor() {
+    const colors = ["#ff3366", "#ff66cc", "#ff0000", "#ff99cc", "#ff6699", "#ff3399", "#ff5fa2"];
+    return colors[Math.floor(Math.random() * colors.length)];
+}
+
+// ====== Tạo tim theo vị trí ký tự ======
+function createMiniHeartAtElement(el) {
+    const rect = el.getBoundingClientRect();
+
+    const heart = document.createElement("div");
+    heart.className = "mini-heart";
+    heart.innerHTML = "💖";
+
+    heart.style.left = (rect.left + rect.width / 2) + "px";
+    heart.style.top = (rect.top + rect.height / 2) + "px";
+    heart.style.color = randomColor();
+
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 1200);
+}
+
+// ====== HIỆU ỨNG GÕ CHỮ ======
 function typeWriter() {
     if (i < message.length) {
         const textEl = document.getElementById("text");
-        textEl.innerHTML += message.charAt(i);
+
+        const span = document.createElement("span");
+        span.textContent = message.charAt(i);
+        textEl.appendChild(span);
+
+        // tạo tim theo đúng vị trí chữ vừa hiện
+        if (message.charAt(i).trim() !== "") {
+            createMiniHeartAtElement(span);
+        }
+
         i++;
-
-        // tạo tim tại vị trí cuối dòng chữ
-        const rect = textEl.getBoundingClientRect();
-        createMiniHeart(
-            rect.left + rect.width - 10,
-            rect.top + rect.height - 20
-        );
-
         setTimeout(typeWriter, speed);
-    } else {
-        // nếu bạn đang ẩn nút thì dòng này có thể đã bị comment
-        // document.getElementById("btn").style.display = "inline-block";
     }
 }
 
 typeWriter();
 
-// ====== BẤM NHẬN QUÀ ======
-function nhanQua() {
-    return; // vô hiệu hóa tạm thời
-}
-
-// ====== TIM BAY ======
+// ====== TIM BAY NỀN ======
 function createHeart() {
     const heart = document.createElement("div");
     heart.className = "heart";
@@ -247,10 +194,7 @@ function createHeart() {
     setTimeout(() => heart.remove(), 4000);
 }
 
-setInterval(createHeart, 300);
-
-// Tim bay cả trên overlay
-setInterval(createHeart, 600);
+setInterval(createHeart, 500);
 </script>
 
 </body>
