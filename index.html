@@ -14,12 +14,11 @@ body {
     text-align: center;
 }
 
-/* Layout card căn giữa màn hình */
+/* Layout card căn giữa */
 .card {
     min-height: 100vh;
     padding: 20px;
     box-sizing: border-box;
-
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -50,45 +49,26 @@ h1 {
 }
 
 /* Tim bay nền */
-.heart {
-    position: fixed;
-    animation: fly 4s linear forwards;
-    pointer-events: none;
-}
-
 @keyframes fly {
     from { transform: translateY(0); opacity: 1; }
     to { transform: translateY(-800px); opacity: 0; }
 }
 
-/* ===== Tim nhỏ theo từng ký tự ===== */
+/* Tim nhỏ theo ký tự */
 @keyframes miniFly {
     from {
-        transform: translate(0, 0) scale(0.8) rotate(0deg);
+        transform: translate(0,0) scale(1) rotate(45deg);
         opacity: 1;
     }
     to {
-        transform: translate(-10px, -50px) scale(1.6) rotate(20deg);
+        transform: translate(-10px,-50px) scale(1.8) rotate(45deg);
         opacity: 0;
     }
 }
 
-.mini-heart {
-    position: fixed;
-    pointer-events: none;
-    font-size: 18px;
-    animation: miniFly 1.2s ease-out forwards;
-    z-index: 9999;
-}
-
-/* Mobile tối ưu chữ */
 @media (max-width: 480px) {
-    h1 {
-        font-size: 24px;
-    }
-    #text {
-        font-size: 17px;
-    }
+    h1 { font-size: 24px; }
+    #text { font-size: 17px; }
 }
 </style>
 </head>
@@ -113,13 +93,9 @@ function startMusic() {
     if (musicStarted) return;
     const audio = document.getElementById("bgm");
     if (!audio) return;
-
     audio.muted = false;
-    audio.play().then(() => {
-        musicStarted = true;
-    }).catch(() => {});
+    audio.play().then(() => musicStarted = true).catch(() => {});
 }
-
 document.body.addEventListener("touchstart", startMusic, { once: true });
 document.body.addEventListener("click", startMusic, { once: true });
 
@@ -138,29 +114,36 @@ Cảm ơn cậu vì đã xuất hiện trong cuộc đời này.
 let i = 0;
 const speed = 45;
 
-// ====== Tim đổi màu ngẫu nhiên ======
+// ====== MÀU NGẪU NHIÊN ======
 function randomColor() {
-    const colors = ["#ff3366", "#ff66cc", "#ff0000", "#ff99cc", "#ff6699", "#ff3399", "#ff5fa2"];
+    const colors = ["#ff0055", "#ff66cc", "#ff0000", "#ff99cc", "#ff3366", "#ff3399", "#ff77aa"];
     return colors[Math.floor(Math.random() * colors.length)];
 }
 
-// ====== Tạo tim theo vị trí ký tự ======
-function createMiniHeartAtElement(el) {
-    const rect = el.getBoundingClientRect();
-
+// ====== TẠO TIM CSS ======
+function createHeart(x, y) {
     const heart = document.createElement("div");
-    heart.className = "mini-heart";
-    heart.innerHTML = "💖";
+    heart.style.position = "fixed";
+    heart.style.left = x + "px";
+    heart.style.top = y + "px";
+    heart.style.width = "14px";
+    heart.style.height = "14px";
+    heart.style.transform = "rotate(45deg)";
+    heart.style.background = randomColor();
+    heart.style.animation = "miniFly 1.2s ease-out forwards";
+    heart.style.zIndex = 9999;
+    heart.style.pointerEvents = "none";
 
-    heart.style.left = (rect.left + rect.width / 2) + "px";
-    heart.style.top = (rect.top + rect.height / 2) + "px";
-    heart.style.color = randomColor();
+    heart.innerHTML = `
+        <div style="position:absolute;width:14px;height:14px;background:inherit;border-radius:50%;top:-7px;left:0;"></div>
+        <div style="position:absolute;width:14px;height:14px;background:inherit;border-radius:50%;left:-7px;top:0;"></div>
+    `;
 
     document.body.appendChild(heart);
     setTimeout(() => heart.remove(), 1200);
 }
 
-// ====== HIỆU ỨNG GÕ CHỮ ======
+// ====== HIỆU ỨNG GÕ CHỮ + TIM ======
 function typeWriter() {
     if (i < message.length) {
         const textEl = document.getElementById("text");
@@ -169,9 +152,10 @@ function typeWriter() {
         span.textContent = message.charAt(i);
         textEl.appendChild(span);
 
-        // tạo tim theo đúng vị trí chữ vừa hiện
-        if (message.charAt(i).trim() !== "") {
-            createMiniHeartAtElement(span);
+        const rects = span.getClientRects();
+        if (rects.length > 0 && message.charAt(i).trim() !== "") {
+            const r = rects[0];
+            createHeart(r.left + r.width / 2, r.top + r.height / 2);
         }
 
         i++;
@@ -182,19 +166,19 @@ function typeWriter() {
 typeWriter();
 
 // ====== TIM BAY NỀN ======
-function createHeart() {
+function createBgHeart() {
     const heart = document.createElement("div");
-    heart.className = "heart";
     heart.innerHTML = "💖";
+    heart.style.position = "fixed";
     heart.style.left = Math.random() * window.innerWidth + "px";
     heart.style.bottom = "0px";
     heart.style.fontSize = (20 + Math.random() * 30) + "px";
+    heart.style.animation = "fly 4s linear forwards";
+    heart.style.pointerEvents = "none";
     document.body.appendChild(heart);
-
     setTimeout(() => heart.remove(), 4000);
 }
-
-setInterval(createHeart, 500);
+setInterval(createBgHeart, 700);
 </script>
 
 </body>
