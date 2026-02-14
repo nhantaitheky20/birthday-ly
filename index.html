@@ -2,183 +2,205 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Happy Birthday 💖</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Gửi Bạn ❤️</title>
 
 <style>
-body {
-    margin: 0;
-    background: linear-gradient(45deg, #ff9a9e, #fad0c4);
-    overflow: hidden;
-    font-family: Arial, sans-serif;
-    text-align: center;
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+
+body{
+height:100vh;
+overflow:hidden;
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+background:radial-gradient(circle at center,#1a001f,#000);
+display:flex;
+align-items:center;
+justify-content:center;
+color:#fff;
+text-align:center;
 }
 
-/* Layout card căn giữa */
-.card {
-    min-height: 100vh;
-    padding: 20px;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+/* Background glow */
+body::before{
+content:"";
+position:absolute;
+width:400px;height:400px;
+background:radial-gradient(circle,#ff1493,transparent 70%);
+filter:blur(120px);
+opacity:.4;
+animation:pulseBg 4s infinite alternate;
+}
+@keyframes pulseBg{from{opacity:.2}to{opacity:.5}}
+
+/* Container */
+.container{z-index:2;max-width:90%;padding:20px;}
+
+h1{
+font-size:32px;
+background:linear-gradient(90deg,#ff4da6,#ff99cc,#ff4da6);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
 }
 
-img {
-    width: 60vw;
-    max-width: 220px;
-    border-radius: 20px;
-    box-shadow: 0 0 20px rgba(255,255,255,0.8);
-    margin-bottom: 10px;
+.message{
+margin-top:15px;
+font-size:18px;
+min-height:60px;
 }
 
-h1 {
-    color: white;
-    text-shadow: 0 0 10px red;
-    margin-bottom: 10px;
+img{
+width:160px;height:160px;
+border-radius:50%;
+object-fit:cover;
+margin-top:20px;
+box-shadow:0 0 25px #ff4da6;
+animation:pulse 2s infinite alternate;
+}
+@keyframes pulse{from{transform:scale(1)}to{transform:scale(1.05)}}
+
+button{
+margin-top:25px;
+padding:12px 28px;
+border:none;
+border-radius:30px;
+background:linear-gradient(45deg,#ff1493,#ff66cc);
+color:#fff;
+font-size:16px;
+cursor:pointer;
 }
 
-#text {
-    color: white;
-    font-size: 18px;
-    margin: 20px;
-    min-height: 140px;
-    white-space: pre-line;
-    max-width: 90vw;
+/* Hearts */
+.heart{
+position:absolute;
+color:#ff4da6;
+animation:float 6s linear infinite;
+}
+@keyframes float{
+0%{transform:translateY(100vh) scale(.5);opacity:0}
+50%{opacity:1}
+100%{transform:translateY(-10vh) scale(1.3);opacity:0}
 }
 
-/* Tim bay nền */
-@keyframes fly {
-    from { transform: translateY(0); opacity: 1; }
-    to { transform: translateY(-800px); opacity: 0; }
-}
-
-/* Tim nhỏ theo ký tự */
-@keyframes miniFly {
-    from {
-        transform: translate(0,0) scale(1) rotate(45deg);
-        opacity: 1;
-    }
-    to {
-        transform: translate(-10px,-50px) scale(1.8) rotate(45deg);
-        opacity: 0;
-    }
-}
-
-@media (max-width: 480px) {
-    h1 { font-size: 24px; }
-    #text { font-size: 17px; }
-}
+canvas{position:absolute;top:0;left:0;z-index:1;}
 </style>
 </head>
 
 <body>
 
-<!-- 🎵 NHẠC -->
-<audio id="bgm" loop playsinline>
-  <source src="happy.mp3" type="audio/mpeg">
-</audio>
+<canvas id="fireworks"></canvas>
 
-<div class="card">
-    <h1>💖 Happy Birthday 💖</h1>
-    <img src="ly.jpeg" alt="Ly">
-    <div id="text"></div>
+<div class="container">
+<h1 id="title">Gửi Bạn ❤️</h1>
+<div class="message" id="text"></div>
+<img id="avatar" style="display:none;">
+<br>
+<input type="file" id="upload" accept="image/*" style="margin-top:10px;color:white">
+<br>
+<button onclick="start()">Nhấn vào đây 💖</button>
 </div>
 
+<audio id="music" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"></audio>
+
 <script>
-// ====== BẬT NHẠC KHI CHẠM ======
-let musicStarted = false;
-function startMusic() {
-    if (musicStarted) return;
-    const audio = document.getElementById("bgm");
-    if (!audio) return;
-    audio.muted = false;
-    audio.play().then(() => musicStarted = true).catch(() => {});
-}
-document.body.addEventListener("touchstart", startMusic, { once: true });
-document.body.addEventListener("click", startMusic, { once: true });
 
-// ====== LỜI CHÚC ======
-const message = `
-Hôm nay là một ngày thật đặc biệt...
-Vì đó là ngày cậu xuất hiện trên thế giới này 💖
-
-Chúc cậu luôn vui vẻ,
-luôn cười thật nhiều,
-luôn hạnh phúc và được yêu thương thật nhiều nhé 🥰
-
-Cảm ơn cậu vì đã xuất hiện trong cuộc đời này.
-`;
-
-let i = 0;
-const speed = 45;
-
-// ====== MÀU NGẪU NHIÊN ======
-function randomColor() {
-    const colors = ["#ff0055", "#ff66cc", "#ff0000", "#ff99cc", "#ff3366", "#ff3399", "#ff77aa"];
-    return colors[Math.floor(Math.random() * colors.length)];
+/* Lấy tên từ URL */
+const params=new URLSearchParams(location.search);
+const name=params.get("name");
+if(name){
+document.getElementById("title").innerText=`Gửi ${name} ❤️`;
 }
 
-// ====== TẠO TIM CSS ======
-function createHeart(x, y) {
-    const heart = document.createElement("div");
-    heart.style.position = "fixed";
-    heart.style.left = x + "px";
-    heart.style.top = y + "px";
-    heart.style.width = "14px";
-    heart.style.height = "14px";
-    heart.style.transform = "rotate(45deg)";
-    heart.style.background = randomColor();
-    heart.style.animation = "miniFly 1.2s ease-out forwards";
-    heart.style.zIndex = 9999;
-    heart.style.pointerEvents = "none";
+/* Upload ảnh */
+const upload=document.getElementById("upload");
+const avatar=document.getElementById("avatar");
+upload.addEventListener("change",function(){
+const file=this.files[0];
+if(file){
+const reader=new FileReader();
+reader.onload=e=>{
+avatar.src=e.target.result;
+avatar.style.display="block";
+}
+reader.readAsDataURL(file);
+}
+});
 
-    heart.innerHTML = `
-        <div style="position:absolute;width:14px;height:14px;background:inherit;border-radius:50%;top:-7px;left:0;"></div>
-        <div style="position:absolute;width:14px;height:14px;background:inherit;border-radius:50%;left:-7px;top:0;"></div>
-    `;
+/* Trái tim bay */
+setInterval(()=>{
+let heart=document.createElement("div");
+heart.className="heart";
+heart.innerHTML="❤";
+heart.style.left=Math.random()*100+"%";
+heart.style.fontSize=Math.random()*25+15+"px";
+document.body.appendChild(heart);
+setTimeout(()=>heart.remove(),6000);
+},400);
 
-    document.body.appendChild(heart);
-    setTimeout(() => heart.remove(), 1200);
+/* Gõ chữ từng dòng */
+const lines=[
+"Chúc bạn luôn xinh đẹp như bây giờ 💕",
+"Luôn cười thật tươi mỗi ngày 🌸",
+"Luôn thành công và hạnh phúc 🌹",
+"Và mãi bên nhau bạn nhé ❤️"
+];
+
+function typeWriter(){
+let i=0;
+function showLine(){
+if(i<lines.length){
+let p=document.createElement("div");
+p.innerText=lines[i];
+p.style.marginTop="8px";
+document.getElementById("text").appendChild(p);
+i++;
+setTimeout(showLine,2000);
+}else{
+explode();
+}
+}
+showLine();
 }
 
-// ====== HIỆU ỨNG GÕ CHỮ + TIM ======
-function typeWriter() {
-    if (i < message.length) {
-        const textEl = document.getElementById("text");
+/* Fireworks nhẹ */
+const canvas=document.getElementById("fireworks");
+const ctx=canvas.getContext("2d");
+canvas.width=innerWidth;
+canvas.height=innerHeight;
 
-        const span = document.createElement("span");
-        span.textContent = message.charAt(i);
-        textEl.appendChild(span);
-
-        const rects = span.getClientRects();
-        if (rects.length > 0 && message.charAt(i).trim() !== "") {
-            const r = rects[0];
-            createHeart(r.left + r.width / 2, r.top + r.height / 2);
-        }
-
-        i++;
-        setTimeout(typeWriter, speed);
-    }
+let particles=[];
+function explode(){
+for(let i=0;i<120;i++){
+particles.push({
+x:canvas.width/2,
+y:canvas.height/2,
+angle:Math.random()*Math.PI*2,
+speed:Math.random()*4+2,
+life:80
+});
+}
 }
 
+function animate(){
+ctx.clearRect(0,0,canvas.width,canvas.height);
+particles.forEach((p,i)=>{
+p.x+=Math.cos(p.angle)*p.speed;
+p.y+=Math.sin(p.angle)*p.speed;
+p.life--;
+ctx.beginPath();
+ctx.arc(p.x,p.y,2,0,Math.PI*2);
+ctx.fillStyle=`hsl(${Math.random()*360},100%,70%)`;
+ctx.fill();
+if(p.life<=0)particles.splice(i,1);
+});
+requestAnimationFrame(animate);
+}
+animate();
+
+/* Start */
+function start(){
+document.getElementById("music").play();
 typeWriter();
-
-// ====== TIM BAY NỀN ======
-function createBgHeart() {
-    const heart = document.createElement("div");
-    heart.innerHTML = "💖";
-    heart.style.position = "fixed";
-    heart.style.left = Math.random() * window.innerWidth + "px";
-    heart.style.bottom = "0px";
-    heart.style.fontSize = (20 + Math.random() * 30) + "px";
-    heart.style.animation = "fly 4s linear forwards";
-    heart.style.pointerEvents = "none";
-    document.body.appendChild(heart);
-    setTimeout(() => heart.remove(), 4000);
 }
-setInterval(createBgHeart, 700);
 </script>
 
 </body>
