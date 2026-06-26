@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chúc Mừng Sinh Nhật - Quả Cầu Kí Ức</title>
+    <title>Chúc Mừng Sinh Nhật Bạn Iu</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -11,7 +11,6 @@
             background-color: #000;
             background-size: cover;
             background-position: center;
-            /* Đã xóa dòng gây lỗi đen màn hình trên điện thoại */
             height: 100vh;
             color: white;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -21,10 +20,48 @@
             user-select: none;
         }
 
+        /* MÀN HÌNH LOADING */
+        #loader {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, #ffafbd, #ffc3a0);
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1s ease;
+        }
+        .loader-content {
+            text-align: center;
+            color: #fff;
+            text-shadow: 0 0 20px rgba(255, 20, 147, 0.8);
+            animation: pulseText 2s infinite;
+        }
+        .loader-content h2 { font-size: 2.5rem; margin-bottom: 20px; }
+        @keyframes pulseText {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* HIỆU ỨNG TRÁI TIM BLINK */
+        .heart-blink {
+            position: absolute;
+            color: #ff69b4;
+            font-size: 15px;
+            pointer-events: none;
+            animation: blinkHeart 3s infinite ease-in-out;
+            z-index: 5;
+        }
+        @keyframes blinkHeart {
+            0%, 100% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 0.8; transform: scale(1.2) rotate(10deg); }
+        }
+
         .overlay {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.6); 
+            background: rgba(0, 0, 0, 0.4); 
             z-index: -1;
         }
 
@@ -35,10 +72,10 @@
             text-align: center;
             z-index: 10;
             pointer-events: none; 
-            text-shadow: 0 0 10px black, 0 0 20px rgba(255, 215, 0, 0.8);
+            text-shadow: 0 0 10px black, 0 0 20px #ff69b4;
         }
-        .header h1 { font-size: 2.5rem; color: #ffd700; }
-        .header p { font-size: 1.1rem; color: #e2e8f0; margin-top: 5px; }
+        .header h1 { font-size: 2.5rem; color: #ffebf3; }
+        .header p { font-size: 1.1rem; color: #ffe4e1; margin-top: 5px; }
 
         .scene {
             width: 100vw; height: 100vh;
@@ -55,23 +92,22 @@
 
         .video-item {
             position: absolute;
-            width: 80px; height: 80px;
-            margin: -40px 0 0 -40px; 
+            width: 85px; height: 85px;
+            margin: -42.5px 0 0 -42.5px; 
             border-radius: 50%;
             cursor: pointer;
             background-color: #222;
-            /* Cấu hình hiển thị ảnh đại diện */
             background-size: cover;
             background-position: center;
-            border: 2px solid rgba(255, 255, 255, 0.6);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
-            transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s ease;
+            border: 2px solid #ff69b4;
+            box-shadow: 0 0 15px rgba(255, 105, 180, 0.6);
+            transition: all 0.3s ease;
         }
 
         .video-item:hover {
-            border-color: #ffd700;
-            box-shadow: 0 0 30px #ffd700;
-            filter: brightness(1.2);
+            border-color: #fff;
+            box-shadow: 0 0 30px #ff69b4;
+            transform: scale(1.5) !important;
         }
 
         .video-modal {
@@ -88,30 +124,38 @@
 
         #mainVideo {
             width: 90%; max-width: 900px; max-height: 75vh;
-            border-radius: 15px;
-            box-shadow: 0 0 50px rgba(0, 191, 255, 0.4);
+            border-radius: 20px;
+            box-shadow: 0 0 50px #ff69b4;
             background: #000; outline: none;
         }
 
         .back-btn {
             margin-top: 30px; padding: 12px 40px;
             font-size: 1.2rem; font-weight: bold; color: white;
-            background: transparent; border: 2px solid #ffd700;
+            background: #ff69b4; border: none;
             border-radius: 50px; cursor: pointer;
-            transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 2px;
+            transition: all 0.3s ease; text-transform: uppercase;
         }
         .back-btn:hover {
-            background: #ffd700; color: black; box-shadow: 0 0 20px #ffd700;
+            transform: scale(1.1);
+            box-shadow: 0 0 20px #ff69b4;
         }
     </style>
 </head>
 <body>
+
+    <div id="loader">
+        <div class="loader-content">
+            <h2>Chúc mừng sinh nhật bạn iu nhé! 🎂</h2>
+            <p>Đang chuẩn bị những kí ức ngọt ngào nhất... ❤️</p>
+        </div>
+    </div>
     
     <div class="overlay"></div>
 
     <div class="header">
-        <h1>Quả Cầu Kí Ức</h1>
-        <p>Vuốt để xoay quả cầu - Chạm để xem kí ức ❤️</p>
+        <h1>Chúc mừng sinh nhật bạn iu nhé ❤️</h1>
+        <p>Xoay quả cầu và chạm vào từng mảnh kí ức nhé</p>
     </div>
 
     <div class="scene" id="scene">
@@ -124,9 +168,6 @@
     </div>
 
     <script>
-        // ==========================================
-        // ĐÃ NHẬP SẴN LINK TỪ GITHUB CỦA BẠN
-        // ==========================================
         const CAU_HINH = {
             anhNen: "https://res.cloudinary.com/dq629mmbe/image/upload/v1782458391/thumbnail_1_wgkkfe.jpg", 
 
@@ -134,14 +175,35 @@
                 "https://res.cloudinary.com/dq629mmbe/video/upload/v1782458391/video_ki_niem_2_vw9bgu.mp4",
                 "https://res.cloudinary.com/dq629mmbe/video/upload/v1782458421/video_ki_niem_18_hvk5ba.mp4",
                 "https://res.cloudinary.com/dq629mmbe/video/upload/v1782458424/video_ki_niem_7_fkl8wm.mp4"
-                // Bạn có thể copy paste thêm các link khác tại đây
+                // Thêm các link video khác của bạn vào đây
             ]
         };
-        // ==========================================
+
+        // HIỆU ỨNG TRÁI TIM BLINK KHẮP MÀN HÌNH
+        function createBlinkHearts() {
+            for (let i = 0; i < 40; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart-blink';
+                heart.innerHTML = '❤';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.top = Math.random() * 100 + 'vh';
+                heart.style.animationDelay = Math.random() * 5 + 's';
+                document.body.appendChild(heart);
+            }
+        }
+        createBlinkHearts();
+
+        // XỬ LÝ LOADER
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 1000);
+            }, 2500); // Hiển thị lời chúc trong 2.5 giây
+        });
 
         document.body.style.backgroundImage = `url('${CAU_HINH.anhNen}')`;
 
-        const scene = document.getElementById('scene');
         const sphere = document.getElementById('sphere');
         const videoModal = document.getElementById('videoModal');
         const mainVideo = document.getElementById('mainVideo');
@@ -150,12 +212,10 @@
         const totalVideos = CAU_HINH.danhSachVideo.length; 
         const radius = 260; 
 
-        // TẠO QUẢ CẦU 3D
         for (let i = 0; i < totalVideos; i++) {
             const item = document.createElement('div');
             item.className = 'video-item';
             
-            // MAGIC TRICK CỦA CLOUDINARY: Tự động dùng ảnh cover của video làm nền
             const thumbnailUrl = CAU_HINH.danhSachVideo[i].replace('.mp4', '.jpg');
             item.style.backgroundImage = `url('${thumbnailUrl}')`;
 
@@ -168,19 +228,11 @@
             const baseTransform = `rotateY(${rotateY}deg) rotateX(${rotateX}deg) translateZ(${radius}px)`;
             item.style.transform = baseTransform;
 
-            item.onmouseenter = () => {
-                item.style.transform = `${baseTransform} scale(1.4)`;
-            };
-            item.onmouseleave = () => {
-                item.style.transform = baseTransform;
-            };
+            item.onmouseenter = () => item.style.transform = `${baseTransform} scale(1.4)`;
+            item.onmouseleave = () => item.style.transform = baseTransform;
 
-            // Sự kiện click mở video
             item.addEventListener('click', (e) => {
-                if (isDraggingBlockClick) {
-                    e.preventDefault();
-                    return;
-                }
+                if (isDraggingBlockClick) return;
                 mainVideo.src = CAU_HINH.danhSachVideo[i];
                 videoModal.classList.add('active');
                 mainVideo.play();
@@ -189,15 +241,9 @@
             sphere.appendChild(item);
         }
 
-        // ==========================================
-        // XỬ LÝ VUỐT/KÉO XOAY QUẢ CẦU (THỦ CÔNG)
-        // ==========================================
-        let isDragging = false;
-        let isDraggingBlockClick = false; 
-        let startX, startY;
-        let currentRotationX = 0;
-        let currentRotationY = 0;
-        const sensitivity = 0.5; 
+        // XOAY QUẢ CẦU
+        let isDragging = false, isDraggingBlockClick = false;
+        let startX, startY, currentRotationX = 0, currentRotationY = 0;
 
         const startDrag = (e) => {
             isDragging = true;
@@ -208,48 +254,36 @@
 
         const onDrag = (e) => {
             if (!isDragging) return;
-            
             const currentX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
             const currentY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+            const deltaX = currentX - startX, deltaY = currentY - startY;
 
-            const deltaX = currentX - startX;
-            const deltaY = currentY - startY;
+            if (Math.abs(deltaX) > 5 || Math.abs(deltaY) > 5) isDraggingBlockClick = true;
 
-            if (Math.abs(deltaX) > 5 || Math.abs(deltaY) > 5) {
-                isDraggingBlockClick = true;
-            }
-
-            currentRotationY += deltaX * sensitivity;
-            currentRotationX -= deltaY * sensitivity;
-
+            currentRotationY += deltaX * 0.5;
+            currentRotationX -= deltaY * 0.5;
             sphere.style.transform = `rotateX(${currentRotationX}deg) rotateY(${currentRotationY}deg)`;
-
-            startX = currentX;
-            startY = currentY;
+            startX = currentX; startY = currentY;
         };
 
         const stopDrag = () => {
             isDragging = false;
-            setTimeout(() => { isDraggingBlockClick = false; }, 50);
+            setTimeout(() => isDraggingBlockClick = false, 50);
         };
 
+        const scene = document.getElementById('scene');
         scene.addEventListener('mousedown', startDrag);
         window.addEventListener('mousemove', onDrag);
         window.addEventListener('mouseup', stopDrag);
-
-        scene.addEventListener('touchstart', startDrag, { passive: false });
-        window.addEventListener('touchmove', onDrag, { passive: false });
+        scene.addEventListener('touchstart', startDrag);
+        window.addEventListener('touchmove', onDrag);
         window.addEventListener('touchend', stopDrag);
 
-        // ==========================================
-        // XỬ LÝ NÚT QUAY LẠI
-        // ==========================================
         backBtn.addEventListener('click', () => {
             mainVideo.pause();
             videoModal.classList.remove('active');
-            setTimeout(() => { mainVideo.src = ''; }, 400); 
+            setTimeout(() => mainVideo.src = '', 400); 
         });
-
     </script>
 </body>
 </html>
