@@ -3,160 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chúc Mừng Sinh Nhật - Quả Cầu 3D</title>
+    <title>Chúc Mừng Sinh Nhật - Quả Cầu Kí Ức</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
-            background: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
+            background-color: #000;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
             height: 100vh;
             color: white;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow: hidden; /* Ẩn thanh cuộn */
-            perspective: 1200px; /* Tạo chiều sâu 3D cho không gian */
+            overflow: hidden; 
+            perspective: 1200px; 
         }
 
-        /* Tiêu đề */
+        /* Lớp phủ mờ màu đen để làm nổi bật quả cầu và chữ */
+        .overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6); 
+            z-index: -1;
+        }
+
         .header {
             position: absolute;
             top: 30px;
             width: 100%;
             text-align: center;
             z-index: 10;
-            pointer-events: none; /* Tránh cản trở thao tác xoay quả cầu */
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+            pointer-events: none; 
+            text-shadow: 0 0 10px black, 0 0 20px rgba(255, 215, 0, 0.8);
         }
+        .header h1 { font-size: 2.5rem; color: #ffd700; }
+        .header p { font-size: 1.1rem; color: #e2e8f0; margin-top: 5px; }
 
-        .header h1 {
-            font-size: 2.5rem;
-            color: #ffd700;
-        }
-
-        .header p {
-            font-size: 1.1rem;
-            color: #cbd5e1;
-            margin-top: 5px;
-        }
-
-        /* Không gian 3D chứa quả cầu */
         .scene {
-            width: 100vw;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            width: 100vw; height: 100vh;
+            display: flex; justify-content: center; align-items: center;
         }
 
-        /* Quả cầu chính */
         .sphere {
-            position: relative;
-            width: 0;
-            height: 0;
-            transform-style: preserve-3d; /* Giữ cấu trúc 3D cho các thẻ con */
-            animation: rotateSphere 25s infinite linear; /* Tự động xoay */
+            position: relative; width: 0; height: 0;
+            transform-style: preserve-3d; 
+            animation: rotateSphere 30s infinite linear; 
         }
-
-        /* Khi rê chuột vào, quả cầu ngừng xoay để dễ bấm */
-        .sphere:hover {
-            animation-play-state: paused;
-        }
+        .sphere:hover { animation-play-state: paused; }
 
         @keyframes rotateSphere {
             0% { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
             100% { transform: rotateX(360deg) rotateY(360deg) rotateZ(180deg); }
         }
 
-        /* Từng mảnh ghép (Video Thumbnail đại diện) */
+        /* Các mảnh ghép trên quả cầu bây giờ chứa video */
         .video-item {
             position: absolute;
-            width: 60px;
-            height: 60px;
-            /* Đưa tâm thẻ về giữa để tính toán 3D chuẩn xác */
-            margin: -30px 0 0 -30px; 
+            width: 80px; height: 80px;
+            margin: -40px 0 0 -40px; 
             border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: white;
             cursor: pointer;
-            backdrop-filter: blur(5px);
+            background-color: #222;
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
             transition: all 0.3s ease;
+            overflow: hidden; /* Cắt video thành hình tròn */
+        }
+
+        /* Tùy chỉnh video nhỏ hiển thị trên quả cầu */
+        .video-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            pointer-events: none; /* Tránh xung đột click */
         }
 
         .video-item:hover {
-            transform: scale(1.5) !important; /* Phóng to nhẹ khi hover */
+            transform: scale(1.6) !important; 
             z-index: 20;
-            background: #fff !important;
-            color: #000 !important;
-            box-shadow: 0 0 30px #fff, 0 0 50px #fff;
+            border-color: #ffd700;
+            box-shadow: 0 0 30px #ffd700;
         }
 
-        /* Giao diện Popup Trình Phát Video */
+        /* Popup phát video chính */
         .video-modal {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.95);
             backdrop-filter: blur(15px);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            pointer-events: none;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            z-index: 1000; opacity: 0; pointer-events: none;
             transition: opacity 0.4s ease;
         }
+        .video-modal.active { opacity: 1; pointer-events: auto; }
 
-        .video-modal.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        video {
-            width: 90%;
-            max-width: 900px;
-            max-height: 75vh;
+        #mainVideo {
+            width: 90%; max-width: 900px; max-height: 75vh;
             border-radius: 15px;
             box-shadow: 0 0 50px rgba(0, 191, 255, 0.4);
-            background: #000;
-            outline: none;
+            background: #000; outline: none;
         }
 
-        /* Nút Back */
         .back-btn {
-            margin-top: 30px;
-            padding: 12px 40px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: white;
-            background: transparent;
-            border: 2px solid #00bfff;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+            margin-top: 30px; padding: 12px 40px;
+            font-size: 1.2rem; font-weight: bold; color: white;
+            background: transparent; border: 2px solid #ffd700;
+            border-radius: 50px; cursor: pointer;
+            transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 2px;
         }
-
         .back-btn:hover {
-            background: #00bfff;
-            color: black;
-            box-shadow: 0 0 20px #00bfff;
+            background: #ffd700; color: black; box-shadow: 0 0 20px #ffd700;
         }
-
     </style>
 </head>
 <body>
+    
+    <div class="overlay"></div>
 
     <div class="header">
         <h1>Quả Cầu Kí Ức</h1>
-        <p>31 mảnh ghép lơ lửng - Chạm để xem và quay lại ❤️</p>
+        <p>Những mảnh ghép lơ lửng - Chạm để xem và quay lại ❤️</p>
     </div>
 
     <div class="scene">
@@ -165,88 +132,81 @@
 
     <div class="video-modal" id="videoModal">
         <video id="mainVideo" controls></video>
-        <button class="back-btn" id="backBtn">❮ Quay lại quả cầu</button>
+        <button class="back-btn" id="backBtn">❮ Quay lại</button>
     </div>
 
     <script>
+        // ==========================================
+        // KHU VỰC CÀI ĐẶT DUY NHẤT BẠN CẦN CHỈNH SỬA
+        // ==========================================
+        const CAU_HINH = {
+            // 1. Dán link ảnh nền từ Cloudinary vào đây
+            anhNen: "LINK_ANH_NEN_CUA_BAN", 
+
+            // 2. Dán các link video từ Cloudinary vào đây (đặt trong dấu ngoặc kép, cách nhau bởi dấu phẩy)
+            danhSachVideo: [
+                "LINK_VIDEO_1",
+                "LINK_VIDEO_2",
+                "LINK_VIDEO_3"
+                // Bạn có thể tiếp tục phẩy (,) và xuống dòng thêm link cho đủ 31 video nhé!
+            ]
+        };
+        // ==========================================
+
+
+        // Cài đặt ảnh nền
+        document.body.style.backgroundImage = `url('${CAU_HINH.anhNen}')`;
+
         const sphere = document.getElementById('sphere');
         const videoModal = document.getElementById('videoModal');
         const mainVideo = document.getElementById('mainVideo');
         const backBtn = document.getElementById('backBtn');
 
-        const totalVideos = 31;
-        const radius = 240; // Bán kính của quả cầu (độ to của quả cầu)
+        const totalVideos = CAU_HINH.danhSachVideo.length; 
+        const radius = 260; 
 
-        // Bảng màu ngẫu nhiên cho các mảnh ghép
-        const colors = [
-            'rgba(0, 191, 255, 0.6)', // Xanh dương
-            'rgba(255, 105, 180, 0.6)', // Hồng
-            'rgba(50, 205, 50, 0.6)',  // Xanh lá
-            'rgba(255, 215, 0, 0.6)',  // Vàng
-            'rgba(147, 112, 219, 0.6)'  // Tím
-        ];
-
-        // 1. TẠO QUẢ CẦU 3D BẰNG THUẬT TOÁN FIBONACCI
         for (let i = 0; i < totalVideos; i++) {
             const item = document.createElement('div');
             item.className = 'video-item';
             
-            // Đánh số từ 1 đến 31
-            const videoId = i + 1;
-            item.innerText = videoId;
+            // Lấy trực tiếp video hiển thị làm thumbnail trên quả cầu 
+            // Thêm #t=0.1 để ép trình duyệt tải khung hình đầu tiên của video thay vì màn hình đen
+            const thumbVideo = document.createElement('video');
+            thumbVideo.src = CAU_HINH.danhSachVideo[i] + '#t=0.1';
+            thumbVideo.preload = 'metadata'; // Chỉ tải thông tin cơ bản để web không bị giật lag
+            thumbVideo.muted = true; // Bắt buộc tắt tiếng để không bị phát tiếng chồng chéo
+            item.appendChild(thumbVideo);
 
-            // Đổ màu viền và nền
-            const color = colors[i % colors.length];
-            item.style.background = color;
-            item.style.border = `2px solid ${color.replace('0.6', '1')}`;
-            item.style.boxShadow = `0 0 15px ${color}, inset 0 0 10px ${color}`;
-
-            // --- TÍNH TOÁN TỌA ĐỘ 3D ---
-            // Tính góc phân bổ đều trên mặt cầu
+            // Tính toán 3D Fibonacci
             const phi = Math.acos(1 - 2 * (i + 0.5) / totalVideos);
             const theta = Math.PI * (1 + Math.sqrt(5)) * i;
 
-            // Chuyển đổi sang hệ trục độ (Degrees) cho CSS Transform
             const rotateX = (phi - Math.PI / 2) * (180 / Math.PI);
             const rotateY = theta * (180 / Math.PI);
 
-            // Gắn tọa độ 3D: Quay góc trước, sau đó đẩy ra xa tâm một khoảng bằng Bán Kính
-            // Cần lưu lại transform ban đầu để giữ cấu trúc 3D khi rê chuột (hover)
             const baseTransform = `rotateY(${rotateY}deg) rotateX(${rotateX}deg) translateZ(${radius}px)`;
             item.style.transform = baseTransform;
 
-            // Fix lỗi mất transform gốc khi hover bằng JS
             item.onmouseenter = () => {
-                item.style.transform = `${baseTransform} scale(1.4)`;
+                item.style.transform = `${baseTransform} scale(1.6)`;
             };
             item.onmouseleave = () => {
                 item.style.transform = baseTransform;
             };
 
-            // 2. SỰ KIỆN CLICK MỞ VIDEO
+            // Sự kiện click để mở video lớn
             item.addEventListener('click', () => {
-                // Đường dẫn file chính xác của bạn: video_ki_niem (1).mp4
-                mainVideo.src = `video_ki_niem (${videoId}).mp4`;
-                
-                // Hiển thị khung phát video
+                mainVideo.src = CAU_HINH.danhSachVideo[i];
                 videoModal.classList.add('active');
-                
-                // Tự động phát
                 mainVideo.play();
             });
 
             sphere.appendChild(item);
         }
 
-        // 3. SỰ KIỆN NÚT "QUAY LẠI"
         backBtn.addEventListener('click', () => {
-            // Tạm dừng video
             mainVideo.pause();
-            
-            // Đóng khung phát
             videoModal.classList.remove('active');
-            
-            // Xóa bộ nhớ video để web không bị nặng
             setTimeout(() => { mainVideo.src = ''; }, 400); 
         });
 
