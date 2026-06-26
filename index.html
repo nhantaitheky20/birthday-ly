@@ -99,7 +99,6 @@
             opacity: 0.98;
         }
 
-        /* NẾN SỐ 19 3D */
         .candle-group {
             position: absolute; width: 0; height: 0;
             transform-style: preserve-3d;
@@ -148,7 +147,7 @@
             border-color: #fff; box-shadow: 0 0 30px #fff; transform: scale(1.4) !important;
         }
 
-        /* TÙY CHỈNH POPUP VIDEO & NÚT QUAY LẠI MỚI */
+        /* POPUP VIDEO */
         .video-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(15px);
@@ -157,17 +156,35 @@
         }
         .video-modal.active { opacity: 1; pointer-events: auto; }
         
+        /* TỐI ƯU NÚT QUAY LẠI: Nhỏ gọn hơn */
         .back-btn {
-            margin-bottom: 25px; /* Đổi thành margin-bottom để tạo khoảng cách với video bên dưới */
-            padding: 12px 40px; font-size: 1.1rem; font-weight: bold; color: white;
+            margin-bottom: 12px;
+            padding: 8px 24px; 
+            font-size: 0.9rem; 
+            font-weight: bold; color: white;
             background: #ff69b4; border: none; border-radius: 50px; cursor: pointer; 
             transition: all 0.3s ease; text-transform: uppercase;
         }
-        .back-btn:hover { transform: scale(1.1); box-shadow: 0 0 20px #ff69b4; }
+        .back-btn:hover { transform: scale(1.1); box-shadow: 0 0 15px #ff69b4; }
 
+        /* TỐI ƯU VIDEO: Định dạng dọc 9:16 */
         #mainVideo {
-            width: 90%; max-width: 900px; max-height: 75vh;
-            border-radius: 20px; box-shadow: 0 0 50px #ff69b4; background: #000; outline: none;
+            height: 75vh; /* Ưu tiên lấy chiều cao làm chuẩn để không bị tràn màn hình */
+            max-width: 90vw; 
+            aspect-ratio: 9 / 16; /* Ép khung hình dọc */
+            border-radius: 15px; 
+            box-shadow: 0 0 30px #ff69b4; 
+            background: #000; 
+            outline: none;
+            object-fit: contain; /* Đảm bảo video hiển thị trọn vẹn không bị cắt xén */
+        }
+        
+        @media (max-width: 768px) {
+            #mainVideo {
+                width: 90vw;
+                height: auto;
+                max-height: 75vh;
+            }
         }
     </style>
 </head>
