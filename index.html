@@ -123,6 +123,8 @@
             border: 2px solid #ff69b4;
             box-shadow: 0 0 15px rgba(255, 105, 180, 0.6);
             transition: all 0.3s ease;
+            /* === THÊM DÒNG NÀY ĐỂ TĂNG VÙNG CLICK === */
+            padding: 10px; /* Thêm 10px vùng cảm ứng vô hình */
         }
 
         .video-item:hover {
@@ -308,7 +310,7 @@
             const currentY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
             const deltaX = currentX - startX, deltaY = currentY - startY;
 
-            if (Math.abs(deltaX) > 5 || Math.abs(deltaY) > 5) isDraggingBlockClick = true;
+            if (Math.abs(deltaX) > 15 || Math.abs(deltaY) > 5) isDraggingBlockClick = true;
 
             currentRotationY += deltaX * 0.5;
             currentRotationX -= deltaY * 0.5;
