@@ -11,13 +11,12 @@
             background-color: #000;
             background-size: cover;
             background-position: center;
-            background-attachment: fixed;
+            /* Đã xóa dòng gây lỗi đen màn hình trên điện thoại */
             height: 100vh;
             color: white;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow: hidden; 
             perspective: 1200px; 
-            /* Ngăn trình duyệt cuộn trang khi vuốt trên điện thoại */
             touch-action: none; 
             user-select: none;
         }
@@ -44,14 +43,13 @@
         .scene {
             width: 100vw; height: 100vh;
             display: flex; justify-content: center; align-items: center;
-            cursor: grab; /* Biểu tượng bàn tay khi di chuột vào */
+            cursor: grab; 
         }
-        .scene:active { cursor: grabbing; } /* Biểu tượng nắm tay khi đang kéo */
+        .scene:active { cursor: grabbing; } 
 
         .sphere {
             position: relative; width: 0; height: 0;
             transform-style: preserve-3d; 
-            /* Xóa hiệu ứng tự động xoay, chỉ giữ transition để mượt mà hơn khi ngừng vuốt */
             transition: transform 0.1s ease-out;
         }
 
@@ -62,23 +60,17 @@
             border-radius: 50%;
             cursor: pointer;
             background-color: #222;
+            /* Cấu hình hiển thị ảnh đại diện */
+            background-size: cover;
+            background-position: center;
             border: 2px solid rgba(255, 255, 255, 0.6);
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
             transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s ease;
-            overflow: hidden; 
-        }
-
-        .video-item video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            pointer-events: none; 
         }
 
         .video-item:hover {
             border-color: #ffd700;
             box-shadow: 0 0 30px #ffd700;
-            /* Phóng to khi rê chuột vào để dễ chọn */
             filter: brightness(1.2);
         }
 
@@ -127,13 +119,13 @@
     </div>
 
     <div class="video-modal" id="videoModal">
-        <video id="mainVideo" controls></video>
+        <video id="mainVideo" controls playsinline></video>
         <button class="back-btn" id="backBtn">❮ Quay lại</button>
     </div>
 
     <script>
         // ==========================================
-        // KHU VỰC CÀI ĐẶT
+        // ĐÃ NHẬP SẴN LINK TỪ GITHUB CỦA BẠN
         // ==========================================
         const CAU_HINH = {
             anhNen: "https://res.cloudinary.com/dq629mmbe/image/upload/v1782458391/thumbnail_1_wgkkfe.jpg", 
@@ -142,6 +134,7 @@
                 "https://res.cloudinary.com/dq629mmbe/video/upload/v1782458391/video_ki_niem_2_vw9bgu.mp4",
                 "https://res.cloudinary.com/dq629mmbe/video/upload/v1782458421/video_ki_niem_18_hvk5ba.mp4",
                 "https://res.cloudinary.com/dq629mmbe/video/upload/v1782458424/video_ki_niem_7_fkl8wm.mp4"
+                // Bạn có thể copy paste thêm các link khác tại đây
             ]
         };
         // ==========================================
@@ -162,11 +155,9 @@
             const item = document.createElement('div');
             item.className = 'video-item';
             
-            const thumbVideo = document.createElement('video');
-            thumbVideo.src = CAU_HINH.danhSachVideo[i] + '#t=0.1';
-            thumbVideo.preload = 'metadata'; 
-            thumbVideo.muted = true; 
-            item.appendChild(thumbVideo);
+            // MAGIC TRICK CỦA CLOUDINARY: Tự động dùng ảnh cover của video làm nền
+            const thumbnailUrl = CAU_HINH.danhSachVideo[i].replace('.mp4', '.jpg');
+            item.style.backgroundImage = `url('${thumbnailUrl}')`;
 
             const phi = Math.acos(1 - 2 * (i + 0.5) / totalVideos);
             const theta = Math.PI * (1 + Math.sqrt(5)) * i;
@@ -177,7 +168,6 @@
             const baseTransform = `rotateY(${rotateY}deg) rotateX(${rotateX}deg) translateZ(${radius}px)`;
             item.style.transform = baseTransform;
 
-            // Xử lý hover để phóng to mảnh ghép
             item.onmouseenter = () => {
                 item.style.transform = `${baseTransform} scale(1.4)`;
             };
@@ -185,9 +175,8 @@
                 item.style.transform = baseTransform;
             };
 
-            // Sự kiện click (sẽ kết hợp kiểm tra trạng thái vuốt ở dưới)
+            // Sự kiện click mở video
             item.addEventListener('click', (e) => {
-                // Nếu người dùng đang vuốt xoay thì KHÔNG mở video
                 if (isDraggingBlockClick) {
                     e.preventDefault();
                     return;
@@ -204,17 +193,15 @@
         // XỬ LÝ VUỐT/KÉO XOAY QUẢ CẦU (THỦ CÔNG)
         // ==========================================
         let isDragging = false;
-        let isDraggingBlockClick = false; // Biến khóa click nếu là hành động vuốt
+        let isDraggingBlockClick = false; 
         let startX, startY;
         let currentRotationX = 0;
         let currentRotationY = 0;
-        const sensitivity = 0.5; // Độ nhạy khi vuốt (có thể tăng giảm)
+        const sensitivity = 0.5; 
 
         const startDrag = (e) => {
             isDragging = true;
-            isDraggingBlockClick = false; // Mặc định là click cho đến khi có di chuyển
-            
-            // Lấy tọa độ chuột hoặc ngón tay
+            isDraggingBlockClick = false; 
             startX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
             startY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
         };
@@ -228,16 +215,13 @@
             const deltaX = currentX - startX;
             const deltaY = currentY - startY;
 
-            // Nếu kéo chuột/vuốt ngón tay đi xa hơn 5px thì đánh dấu là đang vuốt (khóa click)
             if (Math.abs(deltaX) > 5 || Math.abs(deltaY) > 5) {
                 isDraggingBlockClick = true;
             }
 
-            // Tính toán góc xoay (kéo ngang đổi Y, kéo dọc đổi X)
             currentRotationY += deltaX * sensitivity;
             currentRotationX -= deltaY * sensitivity;
 
-            // Áp dụng góc xoay vào quả cầu
             sphere.style.transform = `rotateX(${currentRotationX}deg) rotateY(${currentRotationY}deg)`;
 
             startX = currentX;
@@ -246,20 +230,16 @@
 
         const stopDrag = () => {
             isDragging = false;
-            // Xóa khóa click sau 1 khoảng trễ nhỏ để tránh lỗi nhận diện
             setTimeout(() => { isDraggingBlockClick = false; }, 50);
         };
 
-        // Gắn sự kiện cho Chuột (Máy tính)
         scene.addEventListener('mousedown', startDrag);
         window.addEventListener('mousemove', onDrag);
         window.addEventListener('mouseup', stopDrag);
 
-        // Gắn sự kiện cho Cảm ứng (Điện thoại)
         scene.addEventListener('touchstart', startDrag, { passive: false });
         window.addEventListener('touchmove', onDrag, { passive: false });
         window.addEventListener('touchend', stopDrag);
-
 
         // ==========================================
         // XỬ LÝ NÚT QUAY LẠI
