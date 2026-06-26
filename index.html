@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Chúc Mừng Sinh Nhật Bạn Iu</title>
     <style>
         :root {
@@ -147,18 +147,24 @@
             border-color: #fff; box-shadow: 0 0 30px #fff; transform: scale(1.4) !important;
         }
 
-        /* POPUP VIDEO */
+        /* --- TỐI ƯU LẠI GIAO DIỆN POPUP VIDEO --- */
         .video-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(15px);
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            display: flex; flex-direction: column; 
+            
+            /* Kéo nội dung neo sát lên đỉnh màn hình thay vì căn giữa */
+            justify-content: flex-start; 
+            align-items: center;
+            /* Đẩy nút xuống một chút để tránh Camera / Tai thỏ iPhone */
+            padding-top: max(20px, env(safe-area-inset-top)); 
+            
             z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
         }
         .video-modal.active { opacity: 1; pointer-events: auto; }
         
-        /* TỐI ƯU NÚT QUAY LẠI: Nhỏ gọn hơn */
         .back-btn {
-            margin-bottom: 12px;
+            margin-bottom: 15px; /* Giữ khoảng cách vừa vặn với video */
             padding: 8px 24px; 
             font-size: 0.9rem; 
             font-weight: bold; color: white;
@@ -167,23 +173,23 @@
         }
         .back-btn:hover { transform: scale(1.1); box-shadow: 0 0 15px #ff69b4; }
 
-        /* TỐI ƯU VIDEO: Định dạng dọc 9:16 */
+        /* TĂNG KÍCH THƯỚC VIDEO (Do phần header đã được giải phóng) */
         #mainVideo {
-            height: 75vh; /* Ưu tiên lấy chiều cao làm chuẩn để không bị tràn màn hình */
-            max-width: 90vw; 
-            aspect-ratio: 9 / 16; /* Ép khung hình dọc */
+            height: 82vh; /* Video sẽ dài hơn */
+            max-width: 95vw; 
+            aspect-ratio: 9 / 16; 
             border-radius: 15px; 
             box-shadow: 0 0 30px #ff69b4; 
             background: #000; 
             outline: none;
-            object-fit: contain; /* Đảm bảo video hiển thị trọn vẹn không bị cắt xén */
+            object-fit: contain; 
         }
         
         @media (max-width: 768px) {
             #mainVideo {
-                width: 90vw;
+                width: 95vw;
                 height: auto;
-                max-height: 75vh;
+                max-height: 82vh; /* Ép không tràn màn hình điện thoại */
             }
         }
     </style>
