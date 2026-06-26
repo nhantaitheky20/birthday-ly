@@ -95,7 +95,6 @@
             position: absolute;
             border-radius: 50%;
             background: radial-gradient(circle, #fff0f5 30%, #ffb6c1 80%, #ff69b4 100%);
-            /* Tạo viền chấm bi nhìn giống kem bơ viền quanh bánh */
             border: 6px dotted #fff; 
             box-shadow: 0 0 20px rgba(255, 105, 180, 0.8), inset 0 0 30px rgba(255, 20, 147, 0.6);
             opacity: 0.98;
@@ -186,12 +185,8 @@
     </div>
 
     <script>
-        // ==========================================
-        // CẤU HÌNH DỮ LIỆU CỦA BẠN (Dán thêm video vào đây)
-        // ==========================================
         const CAU_HINH = {
             anhNen: "https://res.cloudinary.com/dq629mmbe/image/upload/v1782458391/thumbnail_1_wgkkfe.jpg", 
-
             danhSachVideo: [
                 "https://res.cloudinary.com/dq629mmbe/video/upload/v1782458391/video_ki_niem_2_vw9bgu.mp4",
                 "https://res.cloudinary.com/dq629mmbe/video/upload/v1782458443/video_ki_niem_20_jfnwq2.mp4",
@@ -217,7 +212,6 @@
             ]
         };
 
-        // HIỆU ỨNG TRÁI TIM BLINK
         function createBlinkHearts() {
             const heartCount = window.innerWidth < 768 ? 20 : 40; 
             for (let i = 0; i < heartCount; i++) {
@@ -252,11 +246,10 @@
         const isMobile = window.innerWidth < 768;
         const itemSize = isMobile ? 55 : 85; 
         
-        // THUẬT TOÁN KÍCH THƯỚC BÁNH KEM KẾT DÍNH (ÉP SÁT 2 TẦNG)
         const radiusBottom = isMobile ? 140 : 250; 
         const radiusTop = isMobile ? 80 : 140;     
-        const heightBottom = isMobile ? 35 : 55;   // Tầng 1 hạ thấp
-        const heightTop = isMobile ? -35 : -55;    // Tầng 2 hạ thấp để sát tầng 1
+        const heightBottom = isMobile ? 35 : 55;   
+        const heightTop = isMobile ? -35 : -55;    
 
         const bottomCount = Math.ceil(totalVideos * 0.65);
         const topCount = totalVideos - bottomCount;
@@ -265,8 +258,12 @@
         const createPlate = (radius, posY) => {
             const plate = document.createElement('div');
             plate.className = 'cake-plate';
-            plate.style.width = `${(radius + itemSize/2) * 2}px`;
-            plate.style.height = `${(radius + itemSize/2) * 2}px`;
+            
+            // ĐÃ CHỈNH SỬA Ở ĐÂY: Thu nhỏ bán kính mặt phẳng lọt hẳn vào bên trong vòng video
+            const adjustedRadius = radius - (isMobile ? 15 : 25); 
+            
+            plate.style.width = `${adjustedRadius * 2}px`;
+            plate.style.height = `${adjustedRadius * 2}px`;
             plate.style.transform = `translate(-50%, -50%) translateY(${posY}px) rotateX(90deg)`;
             cakeContainer.appendChild(plate);
         };
@@ -282,7 +279,6 @@
         const candleObj = document.createElement('div');
         candleObj.className = 'candle-group';
         candleObj.style.transform = `translate(0, 0) translateY(${heightTop - itemSize/2 + 2}px)`; 
-        // Tạo ngọn nến 3D bằng cách ghép chéo 2 mặt phẳng
         candleObj.innerHTML = `
             <div class="candle-body"></div>
             <div class="candle-body" style="transform: rotateY(90deg);"></div>
@@ -330,11 +326,9 @@
             cakeContainer.appendChild(item);
         }
 
-        // ĐIỀU CHỈNH GÓC NHÌN & XỬ LÝ VUỐT (Nâng độ nhạy lên 15px để dễ bấm)
+        // ĐIỀU CHỈNH GÓC NHÌN & XỬ LÝ VUỐT
         let isDragging = false, isDraggingBlockClick = false;
         let startX, startY;
-        
-        // Nghiêng nhẹ camera ban đầu để thấy rõ bề mặt bánh 2 tầng
         let currentRotationX = -15; 
         let currentRotationY = 0;
         cakeContainer.style.transform = `rotateX(${currentRotationX}deg) rotateY(${currentRotationY}deg)`;
@@ -357,7 +351,6 @@
             currentRotationY += deltaX * 0.4; 
             currentRotationX -= deltaY * 0.4; 
             
-            // Khóa góc xoay dọc để bánh không bị lộn ngược vòng tròn
             if (currentRotationX > 60) currentRotationX = 60;
             if (currentRotationX < -60) currentRotationX = -60;
 
