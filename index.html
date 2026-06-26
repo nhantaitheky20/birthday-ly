@@ -90,7 +90,6 @@
             transform-style: preserve-3d; transition: transform 0.1s ease-out;
         }
 
-        /* THIẾT KẾ MẶT BÁNH KEM */
         .cake-plate {
             position: absolute;
             border-radius: 50%;
@@ -100,31 +99,41 @@
             opacity: 0.98;
         }
 
-        /* THIẾT KẾ NẾN 3D */
+        /* THIẾT KẾ NẾN SỐ 19 - 3D */
         .candle-group {
             position: absolute; width: 0; height: 0;
             transform-style: preserve-3d;
         }
-        .candle-body {
-            position: absolute; bottom: 0; left: -8px;
-            width: 16px; height: 60px;
-            background: repeating-linear-gradient(-45deg, #fff, #fff 10px, #ff1493 10px, #ff1493 20px);
-            border-radius: 8px 8px 0 0;
+        
+        .candle-number {
+            position: absolute; 
+            bottom: 0; 
+            left: -30px;
+            width: 60px; 
+            text-align: center;
+            font-size: 55px; 
+            font-weight: 900;
+            font-family: 'Arial Black', Impact, sans-serif;
+            color: #ff1493; /* Màu hồng nến đậm */
+            -webkit-text-stroke: 2px #fff; /* Viền trắng bọc quanh chữ */
+            filter: drop-shadow(0px 0px 10px rgba(255, 20, 147, 0.8));
         }
+
         .flame {
-            position: absolute; bottom: 65px; left: -7px;
-            width: 14px; height: 28px;
+            position: absolute; 
+            width: 12px; height: 24px;
             background: #ff9d00;
             border-radius: 50% 50% 20% 20%;
             box-shadow: 0 0 20px #ff9d00, 0 0 40px #ff0000, inset 0 0 10px #fff;
             animation: flicker 0.15s infinite alternate;
         }
+
         @keyframes flicker {
             0% { transform: scale(1) rotate(-2deg); opacity: 0.9; }
             100% { transform: scale(1.1) rotate(2deg); opacity: 1; box-shadow: 0 0 30px #ff9d00, 0 0 50px #ff0000; }
         }
 
-        /* CÁC VIDEO (LỚP PHỦ NGOÀI BÁNH) */
+        /* LỚP PHỦ NGOÀI BÁNH */
         .video-item {
             position: absolute;
             width: var(--item-size); height: var(--item-size);
@@ -140,7 +149,7 @@
             border-color: #fff; box-shadow: 0 0 30px #fff; transform: scale(1.4) !important;
         }
 
-        /* POPUP VIDEO CHÍNH */
+        /* POPUP VIDEO */
         .video-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(15px);
@@ -164,7 +173,7 @@
     <div id="loader">
         <div class="loader-content">
             <h2>Chúc mừng sinh nhật bạn iu nhé! 🎂</h2>
-            <p>Đang thắp nến và chuẩn bị bánh kem... ❤️</p>
+            <p>Đang thắp nến 19 tuổi và chuẩn bị bánh kem... ❤️</p>
         </div>
     </div>
     
@@ -254,40 +263,37 @@
         const bottomCount = Math.ceil(totalVideos * 0.65);
         const topCount = totalVideos - bottomCount;
 
-        // XÂY DỰNG KHUNG CỐT BÁNH VÀ KEM BƠ (MẶT PHẲNG 3D)
         const createPlate = (radius, posY) => {
             const plate = document.createElement('div');
             plate.className = 'cake-plate';
-            
-            // ĐÃ CHỈNH SỬA Ở ĐÂY: Thu nhỏ bán kính mặt phẳng lọt hẳn vào bên trong vòng video
             const adjustedRadius = radius - (isMobile ? 15 : 25); 
-            
             plate.style.width = `${adjustedRadius * 2}px`;
             plate.style.height = `${adjustedRadius * 2}px`;
             plate.style.transform = `translate(-50%, -50%) translateY(${posY}px) rotateX(90deg)`;
             cakeContainer.appendChild(plate);
         };
 
-        // Đáy tầng 1
         createPlate(radiusBottom, heightBottom + itemSize/2 - 2);
-        // Mặt trên tầng 1
         createPlate(radiusBottom, heightBottom - itemSize/2 + 2);
-        // Mặt trên tầng 2
         createPlate(radiusTop, heightTop - itemSize/2 + 2);
 
-        // THÊM NẾN SINH NHẬT VÀO ĐỈNH BÁNH
+        // THÊM NẾN SỐ 19 VÀO ĐỈNH BÁNH
         const candleObj = document.createElement('div');
         candleObj.className = 'candle-group';
-        candleObj.style.transform = `translate(0, 0) translateY(${heightTop - itemSize/2 + 2}px)`; 
+        candleObj.style.transform = `translate(0, 0) translateY(${heightTop - itemSize/2}px)`; 
+        
         candleObj.innerHTML = `
-            <div class="candle-body"></div>
-            <div class="candle-body" style="transform: rotateY(90deg);"></div>
-            <div class="flame"></div>
-            <div class="flame" style="transform: rotateY(90deg);"></div>
+            <div class="candle-number">19</div>
+            <div class="flame" style="left: -15px; bottom: 52px;"></div>
+            <div class="flame" style="left: 12px; bottom: 52px;"></div>
+            
+            <div class="candle-number" style="transform: rotateY(90deg);">19</div>
+            <div class="flame" style="left: -15px; bottom: 52px; transform: rotateY(90deg);"></div>
+            <div class="flame" style="left: 12px; bottom: 52px; transform: rotateY(90deg);"></div>
         `;
         cakeContainer.appendChild(candleObj);
 
-        // XẾP VIDEO XUNG QUANH BÁNH
+        // XẾP VIDEO
         for (let i = 0; i < totalVideos; i++) {
             const item = document.createElement('div');
             item.className = 'video-item';
