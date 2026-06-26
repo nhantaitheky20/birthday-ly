@@ -99,7 +99,7 @@
             opacity: 0.98;
         }
 
-        /* THIẾT KẾ NẾN SỐ 19 - 3D */
+        /* NẾN SỐ 19 3D */
         .candle-group {
             position: absolute; width: 0; height: 0;
             transform-style: preserve-3d;
@@ -114,8 +114,8 @@
             font-size: 55px; 
             font-weight: 900;
             font-family: 'Arial Black', Impact, sans-serif;
-            color: #ff1493; /* Màu hồng nến đậm */
-            -webkit-text-stroke: 2px #fff; /* Viền trắng bọc quanh chữ */
+            color: #ff1493; 
+            -webkit-text-stroke: 2px #fff; 
             filter: drop-shadow(0px 0px 10px rgba(255, 20, 147, 0.8));
         }
 
@@ -133,7 +133,6 @@
             100% { transform: scale(1.1) rotate(2deg); opacity: 1; box-shadow: 0 0 30px #ff9d00, 0 0 50px #ff0000; }
         }
 
-        /* LỚP PHỦ NGOÀI BÁNH */
         .video-item {
             position: absolute;
             width: var(--item-size); height: var(--item-size);
@@ -149,7 +148,7 @@
             border-color: #fff; box-shadow: 0 0 30px #fff; transform: scale(1.4) !important;
         }
 
-        /* POPUP VIDEO */
+        /* TÙY CHỈNH POPUP VIDEO & NÚT QUAY LẠI MỚI */
         .video-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(15px);
@@ -157,15 +156,19 @@
             z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
         }
         .video-modal.active { opacity: 1; pointer-events: auto; }
+        
+        .back-btn {
+            margin-bottom: 25px; /* Đổi thành margin-bottom để tạo khoảng cách với video bên dưới */
+            padding: 12px 40px; font-size: 1.1rem; font-weight: bold; color: white;
+            background: #ff69b4; border: none; border-radius: 50px; cursor: pointer; 
+            transition: all 0.3s ease; text-transform: uppercase;
+        }
+        .back-btn:hover { transform: scale(1.1); box-shadow: 0 0 20px #ff69b4; }
+
         #mainVideo {
             width: 90%; max-width: 900px; max-height: 75vh;
             border-radius: 20px; box-shadow: 0 0 50px #ff69b4; background: #000; outline: none;
         }
-        .back-btn {
-            margin-top: 30px; padding: 12px 40px; font-size: 1.1rem; font-weight: bold; color: white;
-            background: #ff69b4; border: none; border-radius: 50px; cursor: pointer; transition: all 0.3s ease; text-transform: uppercase;
-        }
-        .back-btn:hover { transform: scale(1.1); box-shadow: 0 0 20px #ff69b4; }
     </style>
 </head>
 <body>
@@ -189,8 +192,8 @@
     </div>
 
     <div class="video-modal" id="videoModal">
-        <video id="mainVideo" controls playsinline></video>
         <button class="back-btn" id="backBtn">❮ Quay lại</button>
+        <video id="mainVideo" controls playsinline></video>
     </div>
 
     <script>
@@ -277,7 +280,6 @@
         createPlate(radiusBottom, heightBottom - itemSize/2 + 2);
         createPlate(radiusTop, heightTop - itemSize/2 + 2);
 
-        // THÊM NẾN SỐ 19 VÀO ĐỈNH BÁNH
         const candleObj = document.createElement('div');
         candleObj.className = 'candle-group';
         candleObj.style.transform = `translate(0, 0) translateY(${heightTop - itemSize/2}px)`; 
@@ -293,7 +295,6 @@
         `;
         cakeContainer.appendChild(candleObj);
 
-        // XẾP VIDEO
         for (let i = 0; i < totalVideos; i++) {
             const item = document.createElement('div');
             item.className = 'video-item';
@@ -332,7 +333,6 @@
             cakeContainer.appendChild(item);
         }
 
-        // ĐIỀU CHỈNH GÓC NHÌN & XỬ LÝ VUỐT
         let isDragging = false, isDraggingBlockClick = false;
         let startX, startY;
         let currentRotationX = -15; 
