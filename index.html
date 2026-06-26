@@ -13,11 +13,10 @@
             --subtitle-size: 1.1rem;
         }
 
-        /* Khi màn hình nhỏ hơn 768px (Điện thoại), tự động thu nhỏ các thông số */
         @media (max-width: 768px) {
             :root {
-                --item-size: 55px;
-                --item-margin: -27.5px;
+                --item-size: 60px;
+                --item-margin: -30px;
                 --title-size: 1.8rem;
                 --subtitle-size: 0.9rem;
             }
@@ -104,7 +103,7 @@
         }
         .scene:active { cursor: grabbing; } 
 
-        .sphere {
+        .cake-container {
             position: relative; width: 0; height: 0;
             transform-style: preserve-3d; 
             transition: transform 0.1s ease-out;
@@ -123,14 +122,14 @@
             border: 2px solid #ff69b4;
             box-shadow: 0 0 15px rgba(255, 105, 180, 0.6);
             transition: all 0.3s ease;
-            /* === THÊM DÒNG NÀY ĐỂ TĂNG VÙNG CLICK === */
-            padding: 10px; /* Thêm 10px vùng cảm ứng vô hình */
+            /* Tăng vùng chạm để dễ bấm hơn trên điện thoại */
+            padding: 5px; 
         }
 
         .video-item:hover {
             border-color: #fff;
             box-shadow: 0 0 30px #ff69b4;
-            transform: scale(1.5) !important;
+            transform: scale(1.4) !important;
         }
 
         .video-modal {
@@ -178,11 +177,11 @@
 
     <div class="header">
         <h1>Chúc mừng sinh nhật bạn iu nhé ❤️</h1>
-        <p>Xoay quả cầu và chạm vào từng mảnh kí ức</p>
+        <p>Xoay chiếc bánh và chạm vào từng mảnh kí ức</p>
     </div>
 
     <div class="scene" id="scene">
-        <div class="sphere" id="sphere"></div>
+        <div class="cake-container" id="cakeContainer"></div>
     </div>
 
     <div class="video-modal" id="videoModal">
@@ -192,7 +191,7 @@
 
     <script>
         // ==========================================
-        // CẤU HÌNH DỮ LIỆU CỦA BẠN (Dán thêm video vào đây)
+        // CẤU HÌNH DỮ LIỆU
         // ==========================================
         const CAU_HINH = {
             anhNen: "https://res.cloudinary.com/dq629mmbe/image/upload/v1782458391/thumbnail_1_wgkkfe.jpg", 
@@ -222,7 +221,7 @@
             ]
         };
 
-        // HIỆU ỨNG TRÁI TIM BLINK KHẮP MÀN HÌNH
+        // Tạo hiệu ứng tim
         function createBlinkHearts() {
             const heartCount = window.innerWidth < 768 ? 20 : 40; 
             for (let i = 0; i < heartCount; i++) {
@@ -237,7 +236,6 @@
         }
         createBlinkHearts();
 
-        // XỬ LÝ LOADER
         window.addEventListener('load', () => {
             setTimeout(() => {
                 const loader = document.getElementById('loader');
@@ -246,41 +244,60 @@
             }, 2500); 
         });
 
-        // Tối ưu ảnh nền bằng Cloudinary (giảm dung lượng)
         const optimizedBg = CAU_HINH.anhNen.replace('/upload/', '/upload/q_auto,f_auto/');
         document.body.style.backgroundImage = `url('${optimizedBg}')`;
 
-        const sphere = document.getElementById('sphere');
+        const cakeContainer = document.getElementById('cakeContainer');
         const videoModal = document.getElementById('videoModal');
         const mainVideo = document.getElementById('mainVideo');
         const backBtn = document.getElementById('backBtn');
 
         const totalVideos = CAU_HINH.danhSachVideo.length; 
-        const radius = window.innerWidth < 768 ? 140 : 260; 
+        
+        // --- THUẬT TOÁN TẠO BÁNH KEM 2 TẦNG ---
+        const isMobile = window.innerWidth < 768;
+        
+        // Chia 65% video cho tầng trệt (đế bánh), 35% cho tầng trên
+        const bottomCount = Math.ceil(totalVideos * 0.65);
+        const topCount = totalVideos - bottomCount;
+
+        // Cài đặt thông số kích thước (Bán kính và Độ cao) cho từng tầng
+        const radiusBottom = isMobile ? 150 : 270; 
+        const radiusTop = isMobile ? 90 : 160;     
+        const heightBottom = isMobile ? 50 : 90;   // Đẩy tầng 1 xuống thấp
+        const heightTop = isMobile ? -50 : -90;    // Kéo tầng 2 lên cao
 
         for (let i = 0; i < totalVideos; i++) {
             const item = document.createElement('div');
             item.className = 'video-item';
             
-            // MAGIC TRICK TỐI ƯU HÓA:
-            // Thêm "w_200,h_200,c_fill,q_auto" vào URL để yêu cầu Cloudinary nén ảnh 
-            // cắt khung vuông 200px thay vì tải ảnh gốc siêu to.
             const thumbnailUrl = CAU_HINH.danhSachVideo[i]
                 .replace('/upload/', '/upload/w_200,h_200,c_fill,q_auto,f_auto/')
                 .replace('.mp4', '.jpg');
                 
             item.style.backgroundImage = `url('${thumbnailUrl}')`;
 
-            const phi = Math.acos(1 - 2 * (i + 0.5) / totalVideos);
-            const theta = Math.PI * (1 + Math.sqrt(5)) * i;
+            let angle, radiusZ, posY;
 
-            const rotateX = (phi - Math.PI / 2) * (180 / Math.PI);
-            const rotateY = theta * (180 / Math.PI);
+            // Kiểm tra xem video này thuộc tầng trên hay tầng dưới
+            if (i < bottomCount) {
+                // Sắp xếp vòng tròn tầng 1
+                angle = (i / bottomCount) * 360;
+                radiusZ = radiusBottom;
+                posY = heightBottom;
+            } else {
+                // Sắp xếp vòng tròn tầng 2
+                const topIndex = i - bottomCount;
+                angle = (topIndex / topCount) * 360;
+                radiusZ = radiusTop;
+                posY = heightTop;
+            }
 
-            const baseTransform = `rotateY(${rotateY}deg) rotateX(${rotateX}deg) translateZ(${radius}px)`;
+            // Đặt vào không gian 3D
+            const baseTransform = `rotateY(${angle}deg) translateZ(${radiusZ}px) translateY(${posY}px)`;
             item.style.transform = baseTransform;
 
-            item.onmouseenter = () => item.style.transform = `${baseTransform} scale(1.4)`;
+            item.onmouseenter = () => item.style.transform = `${baseTransform} scale(1.3)`;
             item.onmouseleave = () => item.style.transform = baseTransform;
 
             item.addEventListener('click', (e) => {
@@ -290,12 +307,19 @@
                 mainVideo.play();
             });
 
-            sphere.appendChild(item);
+            cakeContainer.appendChild(item);
         }
 
-        // XOAY QUẢ CẦU
+        // ==========================================
+        // KHỞI TẠO GÓC NHÌN & XỬ LÝ VUỐT
+        // ==========================================
         let isDragging = false, isDraggingBlockClick = false;
-        let startX, startY, currentRotationX = 0, currentRotationY = 0;
+        let startX, startY;
+        
+        // Mặc định góc nhìn chúi xuống 15 độ để nhìn rõ chiếc bánh 3D
+        let currentRotationX = -15; 
+        let currentRotationY = 0;
+        cakeContainer.style.transform = `rotateX(${currentRotationX}deg) rotateY(${currentRotationY}deg)`;
 
         const startDrag = (e) => {
             isDragging = true;
@@ -310,11 +334,17 @@
             const currentY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
             const deltaX = currentX - startX, deltaY = currentY - startY;
 
-            if (Math.abs(deltaX) > 15 || Math.abs(deltaY) > 5) isDraggingBlockClick = true;
+            // Tăng độ nhạy nhận diện vuốt lên 15px để tránh click nhầm (né chuột)
+            if (Math.abs(deltaX) > 15 || Math.abs(deltaY) > 15) isDraggingBlockClick = true;
 
-            currentRotationY += deltaX * 0.5;
-            currentRotationX -= deltaY * 0.5;
-            sphere.style.transform = `rotateX(${currentRotationX}deg) rotateY(${currentRotationY}deg)`;
+            currentRotationY += deltaX * 0.4; // Giảm tốc độ xoay ngang một chút để mượt hơn
+            currentRotationX -= deltaY * 0.4; 
+            
+            // Giới hạn góc xoay dọc để bánh không bị lật ngược quá đà
+            if (currentRotationX > 60) currentRotationX = 60;
+            if (currentRotationX < -60) currentRotationX = -60;
+
+            cakeContainer.style.transform = `rotateX(${currentRotationX}deg) rotateY(${currentRotationY}deg)`;
             startX = currentX; startY = currentY;
         };
 
