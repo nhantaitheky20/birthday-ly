@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Chúc Mừng Sinh Nhật Bạn Iu</title>
     <style>
-        /* BIẾN CSS ĐỂ TỰ ĐỘNG ĐỔI SIZE THEO MÀN HÌNH */
         :root {
             --item-size: 85px;
             --item-margin: -42.5px;
@@ -15,8 +14,8 @@
 
         @media (max-width: 768px) {
             :root {
-                --item-size: 60px;
-                --item-margin: -30px;
+                --item-size: 55px;
+                --item-margin: -27.5px;
                 --title-size: 1.8rem;
                 --subtitle-size: 0.9rem;
             }
@@ -37,39 +36,30 @@
             user-select: none;
         }
 
-        /* MÀN HÌNH LOADING */
         #loader {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: radial-gradient(circle, #ffafbd, #ffc3a0);
             z-index: 2000;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            transition: opacity 1s ease;
-            padding: 20px;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            transition: opacity 1s ease; padding: 20px;
         }
         .loader-content {
-            text-align: center;
-            color: #fff;
+            text-align: center; color: #fff;
             text-shadow: 0 0 20px rgba(255, 20, 147, 0.8);
             animation: pulseText 2s infinite;
         }
         .loader-content h2 { font-size: var(--title-size); margin-bottom: 20px; }
+        
         @keyframes pulseText {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.05); }
         }
 
-        /* HIỆU ỨNG TRÁI TIM BLINK */
         .heart-blink {
-            position: absolute;
-            color: #ff69b4;
-            font-size: 15px;
-            pointer-events: none;
-            animation: blinkHeart 3s infinite ease-in-out;
-            z-index: 5;
+            position: absolute; color: #ff69b4; font-size: 15px;
+            pointer-events: none; animation: blinkHeart 3s infinite ease-in-out; z-index: 5;
         }
         @keyframes blinkHeart {
             0%, 100% { opacity: 0; transform: scale(0.5); }
@@ -77,91 +67,97 @@
         }
 
         .overlay {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.4); 
-            z-index: -1;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5); z-index: -1;
         }
 
         .header {
-            position: absolute;
-            top: 30px;
-            width: 100%;
-            text-align: center;
-            z-index: 10;
-            pointer-events: none; 
-            text-shadow: 0 0 10px black, 0 0 20px #ff69b4;
-            padding: 0 15px;
+            position: absolute; top: 30px; width: 100%;
+            text-align: center; z-index: 10; pointer-events: none; 
+            text-shadow: 0 0 10px black, 0 0 20px #ff69b4; padding: 0 15px;
         }
         .header h1 { font-size: var(--title-size); color: #ffebf3; }
         .header p { font-size: var(--subtitle-size); color: #ffe4e1; margin-top: 5px; }
 
         .scene {
             width: 100vw; height: 100vh;
-            display: flex; justify-content: center; align-items: center;
-            cursor: grab; 
+            display: flex; justify-content: center; align-items: center; cursor: grab; 
         }
         .scene:active { cursor: grabbing; } 
 
         .cake-container {
             position: relative; width: 0; height: 0;
-            transform-style: preserve-3d; 
-            transition: transform 0.1s ease-out;
+            transform-style: preserve-3d; transition: transform 0.1s ease-out;
         }
 
+        /* THIẾT KẾ MẶT BÁNH KEM */
+        .cake-plate {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, #fff0f5 30%, #ffb6c1 80%, #ff69b4 100%);
+            /* Tạo viền chấm bi nhìn giống kem bơ viền quanh bánh */
+            border: 6px dotted #fff; 
+            box-shadow: 0 0 20px rgba(255, 105, 180, 0.8), inset 0 0 30px rgba(255, 20, 147, 0.6);
+            opacity: 0.98;
+        }
+
+        /* THIẾT KẾ NẾN 3D */
+        .candle-group {
+            position: absolute; width: 0; height: 0;
+            transform-style: preserve-3d;
+        }
+        .candle-body {
+            position: absolute; bottom: 0; left: -8px;
+            width: 16px; height: 60px;
+            background: repeating-linear-gradient(-45deg, #fff, #fff 10px, #ff1493 10px, #ff1493 20px);
+            border-radius: 8px 8px 0 0;
+        }
+        .flame {
+            position: absolute; bottom: 65px; left: -7px;
+            width: 14px; height: 28px;
+            background: #ff9d00;
+            border-radius: 50% 50% 20% 20%;
+            box-shadow: 0 0 20px #ff9d00, 0 0 40px #ff0000, inset 0 0 10px #fff;
+            animation: flicker 0.15s infinite alternate;
+        }
+        @keyframes flicker {
+            0% { transform: scale(1) rotate(-2deg); opacity: 0.9; }
+            100% { transform: scale(1.1) rotate(2deg); opacity: 1; box-shadow: 0 0 30px #ff9d00, 0 0 50px #ff0000; }
+        }
+
+        /* CÁC VIDEO (LỚP PHỦ NGOÀI BÁNH) */
         .video-item {
             position: absolute;
-            width: var(--item-size); 
-            height: var(--item-size);
+            width: var(--item-size); height: var(--item-size);
             margin: var(--item-margin) 0 0 var(--item-margin); 
-            border-radius: 50%;
-            cursor: pointer;
-            background-color: #222;
-            background-size: cover;
-            background-position: center;
-            border: 2px solid #ff69b4;
-            box-shadow: 0 0 15px rgba(255, 105, 180, 0.6);
-            transition: all 0.3s ease;
-            /* Tăng vùng chạm để dễ bấm hơn trên điện thoại */
-            padding: 5px; 
+            border-radius: 50%; cursor: pointer; background-color: #222;
+            background-size: cover; background-position: center;
+            border: 3px solid #ff69b4;
+            box-shadow: 0 0 15px rgba(255, 105, 180, 0.8);
+            transition: all 0.3s ease; padding: 5px; 
         }
 
         .video-item:hover {
-            border-color: #fff;
-            box-shadow: 0 0 30px #ff69b4;
-            transform: scale(1.4) !important;
+            border-color: #fff; box-shadow: 0 0 30px #fff; transform: scale(1.4) !important;
         }
 
+        /* POPUP VIDEO CHÍNH */
         .video-modal {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(15px);
-            display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
-            z-index: 1000; opacity: 0; pointer-events: none;
-            transition: opacity 0.4s ease;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(15px);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
         }
         .video-modal.active { opacity: 1; pointer-events: auto; }
-
         #mainVideo {
             width: 90%; max-width: 900px; max-height: 75vh;
-            border-radius: 20px;
-            box-shadow: 0 0 50px #ff69b4;
-            background: #000; outline: none;
+            border-radius: 20px; box-shadow: 0 0 50px #ff69b4; background: #000; outline: none;
         }
-
         .back-btn {
-            margin-top: 30px; padding: 12px 40px;
-            font-size: 1.1rem; font-weight: bold; color: white;
-            background: #ff69b4; border: none;
-            border-radius: 50px; cursor: pointer;
-            transition: all 0.3s ease; text-transform: uppercase;
+            margin-top: 30px; padding: 12px 40px; font-size: 1.1rem; font-weight: bold; color: white;
+            background: #ff69b4; border: none; border-radius: 50px; cursor: pointer; transition: all 0.3s ease; text-transform: uppercase;
         }
-        .back-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 20px #ff69b4;
-        }
+        .back-btn:hover { transform: scale(1.1); box-shadow: 0 0 20px #ff69b4; }
     </style>
 </head>
 <body>
@@ -169,14 +165,14 @@
     <div id="loader">
         <div class="loader-content">
             <h2>Chúc mừng sinh nhật bạn iu nhé! 🎂</h2>
-            <p>Đang chuẩn bị những kí ức ngọt ngào nhất... ❤️</p>
+            <p>Đang thắp nến và chuẩn bị bánh kem... ❤️</p>
         </div>
     </div>
     
     <div class="overlay"></div>
 
     <div class="header">
-        <h1>Chúc mừng sinh nhật bạn iu nhé ❤️</h1>
+        <h1>Chúc mừng sinh nhật bạn iu ❤️</h1>
         <p>Xoay chiếc bánh và chạm vào từng mảnh kí ức</p>
     </div>
 
@@ -191,7 +187,7 @@
 
     <script>
         // ==========================================
-        // CẤU HÌNH DỮ LIỆU
+        // CẤU HÌNH DỮ LIỆU CỦA BẠN (Dán thêm video vào đây)
         // ==========================================
         const CAU_HINH = {
             anhNen: "https://res.cloudinary.com/dq629mmbe/image/upload/v1782458391/thumbnail_1_wgkkfe.jpg", 
@@ -221,7 +217,7 @@
             ]
         };
 
-        // Tạo hiệu ứng tim
+        // HIỆU ỨNG TRÁI TIM BLINK
         function createBlinkHearts() {
             const heartCount = window.innerWidth < 768 ? 20 : 40; 
             for (let i = 0; i < heartCount; i++) {
@@ -253,20 +249,49 @@
         const backBtn = document.getElementById('backBtn');
 
         const totalVideos = CAU_HINH.danhSachVideo.length; 
-        
-        // --- THUẬT TOÁN TẠO BÁNH KEM 2 TẦNG ---
         const isMobile = window.innerWidth < 768;
+        const itemSize = isMobile ? 55 : 85; 
         
-        // Chia 65% video cho tầng trệt (đế bánh), 35% cho tầng trên
+        // THUẬT TOÁN KÍCH THƯỚC BÁNH KEM KẾT DÍNH (ÉP SÁT 2 TẦNG)
+        const radiusBottom = isMobile ? 140 : 250; 
+        const radiusTop = isMobile ? 80 : 140;     
+        const heightBottom = isMobile ? 35 : 55;   // Tầng 1 hạ thấp
+        const heightTop = isMobile ? -35 : -55;    // Tầng 2 hạ thấp để sát tầng 1
+
         const bottomCount = Math.ceil(totalVideos * 0.65);
         const topCount = totalVideos - bottomCount;
 
-        // Cài đặt thông số kích thước (Bán kính và Độ cao) cho từng tầng
-        const radiusBottom = isMobile ? 150 : 270; 
-        const radiusTop = isMobile ? 90 : 160;     
-        const heightBottom = isMobile ? 50 : 90;   // Đẩy tầng 1 xuống thấp
-        const heightTop = isMobile ? -50 : -90;    // Kéo tầng 2 lên cao
+        // XÂY DỰNG KHUNG CỐT BÁNH VÀ KEM BƠ (MẶT PHẲNG 3D)
+        const createPlate = (radius, posY) => {
+            const plate = document.createElement('div');
+            plate.className = 'cake-plate';
+            plate.style.width = `${(radius + itemSize/2) * 2}px`;
+            plate.style.height = `${(radius + itemSize/2) * 2}px`;
+            plate.style.transform = `translate(-50%, -50%) translateY(${posY}px) rotateX(90deg)`;
+            cakeContainer.appendChild(plate);
+        };
 
+        // Đáy tầng 1
+        createPlate(radiusBottom, heightBottom + itemSize/2 - 2);
+        // Mặt trên tầng 1
+        createPlate(radiusBottom, heightBottom - itemSize/2 + 2);
+        // Mặt trên tầng 2
+        createPlate(radiusTop, heightTop - itemSize/2 + 2);
+
+        // THÊM NẾN SINH NHẬT VÀO ĐỈNH BÁNH
+        const candleObj = document.createElement('div');
+        candleObj.className = 'candle-group';
+        candleObj.style.transform = `translate(0, 0) translateY(${heightTop - itemSize/2 + 2}px)`; 
+        // Tạo ngọn nến 3D bằng cách ghép chéo 2 mặt phẳng
+        candleObj.innerHTML = `
+            <div class="candle-body"></div>
+            <div class="candle-body" style="transform: rotateY(90deg);"></div>
+            <div class="flame"></div>
+            <div class="flame" style="transform: rotateY(90deg);"></div>
+        `;
+        cakeContainer.appendChild(candleObj);
+
+        // XẾP VIDEO XUNG QUANH BÁNH
         for (let i = 0; i < totalVideos; i++) {
             const item = document.createElement('div');
             item.className = 'video-item';
@@ -278,22 +303,17 @@
             item.style.backgroundImage = `url('${thumbnailUrl}')`;
 
             let angle, radiusZ, posY;
-
-            // Kiểm tra xem video này thuộc tầng trên hay tầng dưới
             if (i < bottomCount) {
-                // Sắp xếp vòng tròn tầng 1
                 angle = (i / bottomCount) * 360;
                 radiusZ = radiusBottom;
                 posY = heightBottom;
             } else {
-                // Sắp xếp vòng tròn tầng 2
                 const topIndex = i - bottomCount;
                 angle = (topIndex / topCount) * 360;
                 radiusZ = radiusTop;
                 posY = heightTop;
             }
 
-            // Đặt vào không gian 3D
             const baseTransform = `rotateY(${angle}deg) translateZ(${radiusZ}px) translateY(${posY}px)`;
             item.style.transform = baseTransform;
 
@@ -310,13 +330,11 @@
             cakeContainer.appendChild(item);
         }
 
-        // ==========================================
-        // KHỞI TẠO GÓC NHÌN & XỬ LÝ VUỐT
-        // ==========================================
+        // ĐIỀU CHỈNH GÓC NHÌN & XỬ LÝ VUỐT (Nâng độ nhạy lên 15px để dễ bấm)
         let isDragging = false, isDraggingBlockClick = false;
         let startX, startY;
         
-        // Mặc định góc nhìn chúi xuống 15 độ để nhìn rõ chiếc bánh 3D
+        // Nghiêng nhẹ camera ban đầu để thấy rõ bề mặt bánh 2 tầng
         let currentRotationX = -15; 
         let currentRotationY = 0;
         cakeContainer.style.transform = `rotateX(${currentRotationX}deg) rotateY(${currentRotationY}deg)`;
@@ -334,13 +352,12 @@
             const currentY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
             const deltaX = currentX - startX, deltaY = currentY - startY;
 
-            // Tăng độ nhạy nhận diện vuốt lên 15px để tránh click nhầm (né chuột)
             if (Math.abs(deltaX) > 15 || Math.abs(deltaY) > 15) isDraggingBlockClick = true;
 
-            currentRotationY += deltaX * 0.4; // Giảm tốc độ xoay ngang một chút để mượt hơn
+            currentRotationY += deltaX * 0.4; 
             currentRotationX -= deltaY * 0.4; 
             
-            // Giới hạn góc xoay dọc để bánh không bị lật ngược quá đà
+            // Khóa góc xoay dọc để bánh không bị lộn ngược vòng tròn
             if (currentRotationX > 60) currentRotationX = 60;
             if (currentRotationX < -60) currentRotationX = -60;
 
